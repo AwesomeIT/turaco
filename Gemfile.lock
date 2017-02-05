@@ -1,3 +1,12 @@
+GIT
+  remote: git://github.com/birdfeed/kagu.git
+  revision: e4f938c5f22f08d98a75b9d8a94f774252b8ecf3
+  specs:
+    kagu (0.0.1)
+      activerecord
+      activesupport
+      rake
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -180,6 +189,7 @@ DEPENDENCIES
   gemrat (= 0.4.6)
   jbuilder (~> 2.5)
   jquery-rails
+  kagu!
   listen (~> 3.0.5)
   pg
   puma (~> 3.0)

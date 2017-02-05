@@ -55,3 +55,6 @@ gem 'rspec-rails', '3.5.2'
 
 # Laziness
 gem 'gemrat', '0.4.6'
+
+# Database models
+gem 'kagu', git: 'git://github.com/birdfeed/kagu.git'
