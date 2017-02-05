@@ -1,8 +1,8 @@
 development:
   adapter: postgresql
-  database: turaco
+  database: talkbirdy
   pool: 5
-  username: 
+  username: davidstancu
   password: 
 
 # Warning: The database defined as "test" will be erased and
@@ -10,14 +10,14 @@ development:
 # Do not set this db to the same as development or production.
 test:
   adapter: postgresql
-  database: turaco
+  database: talkbirdy
   pool: 5
   username: 
   password: 
 
 production:
   adapter: postgresql
-  database: turaco
+  database: talkbirdy
   pool: 5
   username: 
   password: 
