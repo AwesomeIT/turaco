@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: e4f938c5f22f08d98a75b9d8a94f774252b8ecf3
+  revision: d8bf458ec2cb9739090d96437216b34342f5d330
   specs:
-    kagu (0.0.1)
+    kagu (0.0.2)
       activerecord
       activesupport
       rake
@@ -118,7 +118,7 @@ GEM
     notiffany (0.1.1)
       nenv (~> 0.1)
       shellany (~> 0.0)
-    parser (2.3.3.1)
+    parser (2.4.0.0)
       ast (~> 2.2)
     pg (0.19.0)
     powerpack (0.1.1)
