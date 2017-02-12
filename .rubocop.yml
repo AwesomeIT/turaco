@@ -1,0 +1,16 @@
+require: rubocop-rspec
+
+AllCops:
+  DisplayCopNames: true
+  Exclude: 
+    - ./config/**/*.rb
+    - ./db/*.rb
+    - Gemfile
+    - Guardfile
+    - ./vendor/**/*
+
+Style/Documentation:
+  Enabled: false
+
+Lint/Debugger:
+  Enabled: false
