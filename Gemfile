@@ -65,3 +65,6 @@ gem 'gemrat', '0.4.6'
 
 # Database models
 gem 'kagu', git: 'git://github.com/birdfeed/kagu.git'
+
+gem 'devise', '4.2.0'
+gem 'grape', '0.19.1'

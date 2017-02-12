@@ -2,7 +2,7 @@ development:
   adapter: postgresql
   database: talkbirdy
   pool: 5
-  username: davidstancu
+  username: postgres
   password: 
 
 # Warning: The database defined as "test" will be erased and
@@ -12,12 +12,12 @@ test:
   adapter: postgresql
   database: talkbirdy
   pool: 5
-  username: 
+  username: postgres
   password: 
 
 production:
   adapter: postgresql
   database: talkbirdy
   pool: 5
-  username: 
+  username: postgres
   password: 
