@@ -51,7 +51,6 @@ group :development do
   gem 'guard'
   gem 'guard-rubocop'
   gem 'guard-rspec', require: false
-  gem 'rubocop-rspec', '1.10.0'
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
 end

@@ -5,23 +5,32 @@ module API
       include Roar::JSON
       include Roar::Hypermedia
 
-      # TODO: Add more declarations for different relationships,
-      # namely HABTM
-      def self.inherited(child)
-        super(child)
+      class << self
+        # TODO: Add more declarations for different relationships,
+        # namely HABTM
+        def inherited(child)
+          super(child)
 
-        klass = "Kagu::Models::#{child.to_s.demodulize}".safe_constantize
-        klass.reflections.each_pair do |name, meta|
-          child.class_eval case meta
-                           when ActiveRecord::Reflection::BelongsToReflection
-                             "property :#{name}, "\
-                               "decorator: API::Entities::#{name.camelize}"
-                           when ActiveRecord::Reflection::HasManyReflection
-                             "collection :#{meta.plural_name}, "\
-                               "extend: API::Entities::#{name.camelize}"
-                           else ''
-                           end
-        end if klass.present?
+          klass = "Kagu::Models::#{child.to_s.demodulize}".safe_constantize
+          return unless klass.present?
+
+          klass.reflections
+               .each_pair { |n, m| child.class_eval(generate_eval(n, m)) }
+        end
+
+        private
+
+        def generate_eval(name, meta)
+          case meta
+          when ActiveRecord::Reflection::BelongsToReflection
+            "property :#{name}, "\
+              "decorator: API::Entities::#{name.camelize}"
+          when ActiveRecord::Reflection::HasManyReflection
+            "collection :#{meta.plural_name}, "\
+              "extend: API::Entities::#{name.camelize}"
+          else ''
+          end
+        end
       end
 
       link :self do |opts|
