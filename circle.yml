@@ -1,3 +1,8 @@
+dependencies:
+  pre:
+    - git clone https://github.com/awesomeit/kagu kagu
+    - cd kagu; bundle; bundle exec rake db:reset; cd -;
+
 test:
   pre:
     - bundle exec rubocop
