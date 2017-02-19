@@ -5,4 +5,5 @@ module API
   autoload :Entities
   autoload :Resources
   autoload :Root
+  autoload :Endpoints
 end
