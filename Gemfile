@@ -68,5 +68,26 @@ gem 'gemrat', '0.4.6'
 # Database models
 gem 'kagu', git: 'git://github.com/birdfeed/kagu.git'
 
+# Authentication system (if we want ACLs we can use CanCan but it's old as shit)
 gem 'devise', '4.2.0'
+
+# API
 gem 'grape', '0.19.1'
+
+# Entity system with Grape, HAL plugins
+gem 'roar', '1.1.0'
+gem 'grape-roar', '0.4.0'
+
+# The best thing ever
+gem 'pry', '0.10.4'
+gem 'pry-rails', '0.3.5'
+
+# Factories
+gem 'factory_girl', '4.8.0'
+gem 'factory_girl_rails', '4.8.0'
+
+# Fancy ass errors
+gem 'better_errors', '2.1.1'
+
+# Generate fixture strings, numbers, etc.
+gem 'faker', '1.7.3'
