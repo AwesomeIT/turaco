@@ -17,7 +17,6 @@ describe 'Score CRUD', type: :request do
 		let(:result) { JSON.parse(response.body) }
 
 		it 'should create a score' do 
-			binding.pry
 			expect(response.code).to eql('201')
 		end
 
