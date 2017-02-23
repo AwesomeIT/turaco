@@ -1,6 +1,7 @@
 database:
   override:
     - git clone https://github.com/awesomeit/kagu kagu
+    - cp kagu/db/schema.rb db/schema.rb
     - cd kagu; bundle; RAILS_ENV=test bundle exec rake db:test:prepare;
 
 test:
