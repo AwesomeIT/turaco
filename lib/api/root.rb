@@ -2,9 +2,8 @@
 module API
   class Root < Grape::API
     format :json
+    formatter :json, Grape::Formatter::Roar
 
-    get do
-      { hello: 'world' }
-    end
+    mount Endpoints::Score => '/score'
   end
 end
