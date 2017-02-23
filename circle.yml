@@ -1,7 +1,7 @@
 database:
   override:
     - git clone https://github.com/awesomeit/kagu kagu
-    - cd kagu; bundle; bundle exec rake db:reset db:test:prepare;
+    - cd kagu; bundle; RAILS_ENV=test bundle exec rake test:prepare;
 
 test:
   pre:
