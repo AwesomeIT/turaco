@@ -90,3 +90,7 @@ gem 'better_errors', '2.1.1'
 
 # Generate fixture strings, numbers, etc.
 gem 'faker', '1.7.3'
+
+# Interface with AWS
+gem 'aws-sdk', '2.7.13'
+gem 'dotenv-rails', '2.2.0'
