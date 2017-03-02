@@ -15,13 +15,37 @@ module API
         status 201
 
         s3_url = Adapters::S3.upload_file(
-          'birdfeedtemp', params[:file]['tempfile'], params[:file]['filename']
+          'birdfeedtemp',
+          params[:file]['tempfile'].path,
+          params[:file]['filename']
         )
 
         present(
           ::Sample.create(
             declared(params).except(:file).merge(s3_url: s3_url) .to_h
           ), with: Entities::Sample
+        )
+      end
+
+      desc 'Retrieve a sample'
+      params do
+        requires :id, type: Integer, desc: 'ID of sample'
+      end
+      get '/:id' do
+        status 200
+        binding.pry
+        present(
+          ::Sample.find(declared(params)[:id]),
+          with: Entities::Sample
+        )
+      end
+
+      desc 'Retrieve a list of samples'
+      get do
+        status 200
+
+        present(
+          ::Sample.all, with: Entities::Sample
         )
       end
     end

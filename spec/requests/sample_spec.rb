@@ -7,6 +7,8 @@ describe 'Sample CRUD', type: :request do
   
   context 'PUT /sample' do 
     before do
+      allow(Adapters::S3).to receive(:upload_file).and_return(true)
+
       put '/v3/sample', 
         user_id: user.id,
         name: 'name',
@@ -19,17 +21,50 @@ describe 'Sample CRUD', type: :request do
     let(:result) { JSON.parse(response.body) }
 
     it 'should create a sample' do 
+      expect(Adapters::S3)
+        .to have_received(:upload_file)
+        .with(
+          'birdfeedtemp', instance_of(String),attachment.original_filename
+        )
+
       expect(response.code).to eql('201')
     end
 
     context 'with invalid/missing parameters' do 
-      before do
-        put '/v3/sample', 
-          user_id: user.id
-      end
+      before { put '/v3/sample', user_id: user.id }
+
       it 'should enforce required' do 
         expect(response.code).to eql('400')
         expect(JSON.parse(response.body)).to have_key('error')
+      end
+    end
+  end
+
+  context 'GET /sample' do
+    let(:samples) { FactoryGirl.create_list(:sample, 15) }
+
+    context 'get single sample' do
+      before do
+        get "/v3/sample/#{samples.first.id}"
+      end
+
+      let(:result) { JSON.parse(response.body) }
+
+      it 'should retrieve an existing sample' do
+        expect(response.code).to eql('200')
+      end
+    end
+
+    context 'get all samples' do
+      before do
+        get '/v3/sample/'
+      end
+
+      let(:result) { JSON.parse(response.body) }
+
+      it 'should get all samples' do
+        binding.pry
+        expect(response.code).to eql('200')
       end
     end
   end
