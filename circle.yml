@@ -6,3 +6,4 @@ dependencies:
 test:
   pre:
     - bundle exec rubocop
+    - bundle exec rake db:reset DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=test
