@@ -2,7 +2,7 @@
 module API
   module Entities
     class Sample < Base
-      property :s3_url
+      # property :s3_url
     end
   end
 end

@@ -33,7 +33,7 @@ module API
       end
       get '/:id' do
         status 200
-        binding.pry
+
         present(
           ::Sample.find(declared(params)[:id]),
           with: Entities::Sample
@@ -45,7 +45,7 @@ module API
         status 200
 
         present(
-          ::Sample.all, with: Entities::Sample
+          ::Sample.all, with: Entities::Collection
         )
       end
     end

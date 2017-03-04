@@ -8,7 +8,6 @@ describe 'Sample CRUD', type: :request do
   context 'PUT /sample' do 
     before do
       allow(Adapters::S3).to receive(:upload_file).and_return(true)
-
       put '/v3/sample', 
         user_id: user.id,
         name: 'name',
@@ -41,14 +40,14 @@ describe 'Sample CRUD', type: :request do
   end
 
   context 'GET /sample' do
-    let(:samples) { FactoryGirl.create_list(:sample, 15) }
+    let!(:samples) { FactoryGirl.create_list(:sample, 15) }
 
     context 'get single sample' do
       before do
         get "/v3/sample/#{samples.first.id}"
       end
 
-      let(:result) { JSON.parse(response.body) }
+      let!(:result) { JSON.parse(response.body) }
 
       it 'should retrieve an existing sample' do
         expect(response.code).to eql('200')
@@ -60,10 +59,10 @@ describe 'Sample CRUD', type: :request do
         get '/v3/sample/'
       end
 
-      let(:result) { JSON.parse(response.body) }
+      let!(:result) { JSON.parse(response.body) }
 
       it 'should get all samples' do
-        binding.pry
+        expect(result["samples"].count).to eql(15)
         expect(response.code).to eql('200')
       end
     end
