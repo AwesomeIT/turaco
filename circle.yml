@@ -1,9 +1,8 @@
 dependencies:
   pre:
     - git clone https://github.com/awesomeit/kagu kagu
-    - cd kagu; bundle; bundle exec rake db:reset; cd -;
+    - cd kagu; bundle; bundle exec rake db:reset; bundle exec rake db:reset DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=test; cd -;
 
 test:
   pre:
     - bundle exec rubocop
-    - bundle exec rake db:reset DISABLE_DATABASE_ENVIRONMENT_CHECK=1 RAILS_ENV=test
