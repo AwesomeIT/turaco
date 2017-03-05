@@ -5,5 +5,6 @@ module API
     formatter :json, Grape::Formatter::Roar
 
     mount Endpoints::Score => '/score'
+    mount Endpoints::Sample => '/sample'
   end
 end

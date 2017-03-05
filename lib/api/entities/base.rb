@@ -35,9 +35,9 @@ module API
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
-
         "#{request.base_url}#{request.script_name}/"\
-          "#{represented.class.name.demodulize.downcase}/#{represented.id}"
+          "#{represented.class.name.demodulize.downcase}/"\
+          "#{represented.try(:id)}"
       end
     end
   end
