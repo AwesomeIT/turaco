@@ -7,6 +7,7 @@ AllCops:
     - Guardfile
     - ./vendor/**/*
     - ./spec/**/*
+    - ./kagu/**/*
 
 Style/Documentation:
   Enabled: false

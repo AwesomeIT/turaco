@@ -7,11 +7,13 @@ describe 'Score CRUD', type: :request do
 
   context 'PUT /score' do 
     before do
-      put '/v3/score', 
+      put '/v3/score',
+      params: { 
         user_id: user.id,
         experiment_id: experiment.id,
         sample_id: sample.id,
         rating: 0.5
+      }
     end
 
     let(:result) { JSON.parse(response.body) }
@@ -35,9 +37,11 @@ describe 'Score CRUD', type: :request do
     context 'with invalid/missing parameters' do 
       before do
         put '/v3/score', 
+        params: {
           user_id: user.id,
           experiment_id: experiment.id,
           sample_id: sample.id
+        }
       end
       it 'should enforce required' do 
         expect(response.code).to eql('400')
