@@ -67,4 +67,23 @@ describe 'Sample CRUD', type: :request do
       end
     end
   end
+
+  context 'DELETE /sample' do
+    let!(:sample) { FactoryGirl.create(:sample) }
+
+    context 'delete a sample' do
+      before do
+        delete "/v3/sample/#{sample.id}"
+      end
+
+      let!(:result) { JSON.parse(response.body) }
+
+      it 'should have deleted the sample' do
+        binding.pry
+        expect(response.code).to eql('204')
+        expect(::Sample.exists?(sample.id)).to eql(false)
+      end
+
+    end
+  end
 end

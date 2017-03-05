@@ -48,6 +48,16 @@ module API
           ::Sample.all, with: Entities::Collection
         )
       end
+
+      desc 'Delete a sample'
+      params do
+        requires :id, type: Integer, desc: 'ID of sample'
+      end
+      delete '/:id' do
+        status 204
+
+        ::Sample.delete(declared(params)[:id])
+      end
     end
   end
 end
