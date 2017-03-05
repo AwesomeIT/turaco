@@ -58,6 +58,23 @@ module API
 
         ::Sample.delete(declared(params)[:id])
       end
+
+      desc 'Update a sample'
+      params do
+        requires :id, type: Integer, desc: 'ID of sample to be updated'
+        optional :name, type: String, desc: 'name of sample'
+        optional :private, type: Boolean, desc: 'flag for sample sharing'
+      end
+      put '/:id' do
+        status 204
+
+        present(
+          ::Sample.find(params[:id]).update(
+            name: params[:name],
+            private: params[:private]
+          )
+        )
+      end
     end
   end
 end

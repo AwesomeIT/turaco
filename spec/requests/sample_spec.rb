@@ -79,11 +79,30 @@ describe 'Sample CRUD', type: :request do
       let!(:result) { JSON.parse(response.body) }
 
       it 'should have deleted the sample' do
-        binding.pry
         expect(response.code).to eql('204')
         expect(::Sample.exists?(sample.id)).to eql(false)
       end
+    end
+  end
 
+  context 'UPDATE /sample' do
+    let! (:sample) { FactoryGirl.create(:sample) }
+
+    context 'update a sample' do
+      before do
+        binding.pry
+        put "/v3/sample/#{sample.id}",
+          user_id: user.id,
+          name: 'new_name'
+      end
+
+      let!(:result) { JSON.parse(response.body) }
+
+      it 'should have updated the sample' do
+        expect(response.code).to eql('204')
+        binding.pry
+        expect(::Sample.find(sample.id).name).to eql('new_name')
+      end
     end
   end
 end
