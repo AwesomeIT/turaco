@@ -9,12 +9,14 @@ describe 'Sample CRUD', type: :request do
     before do
       allow(Adapters::S3).to receive(:upload_file).and_return(true)
       put '/v3/sample', 
+      params: {
         user_id: user.id,
         name: 'name',
         private: false,
         file: attachment,
         low_label: 'not R',
         high_label: 'R'
+      }
     end
 
     let(:result) { JSON.parse(response.body) }
@@ -30,7 +32,7 @@ describe 'Sample CRUD', type: :request do
     end
 
     context 'with invalid/missing parameters' do 
-      before { put '/v3/sample', user_id: user.id }
+      before { put '/v3/sample', params: { user_id: user.id } }
 
       it 'should enforce required' do 
         expect(response.code).to eql('400')
@@ -90,17 +92,17 @@ describe 'Sample CRUD', type: :request do
 
     context 'update a sample' do
       before do
-        binding.pry
         put "/v3/sample/#{sample.id}",
+        params: {
           user_id: user.id,
           name: 'new_name'
+        }
       end
 
       let!(:result) { JSON.parse(response.body) }
 
       it 'should have updated the sample' do
         expect(response.code).to eql('204')
-        binding.pry
         expect(::Sample.find(sample.id).name).to eql('new_name')
       end
     end
