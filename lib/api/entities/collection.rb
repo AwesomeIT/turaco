@@ -6,12 +6,22 @@ module API
       include Roar::Hypermedia
 
       class << self
+        # TODO: Find a better way to do this
+        # If `representable` or `grape-roar` change their interfaces we are SOL
+        # with a breaking change if our lockfile fails us.
         def represent(object, _options = {})
-          extract_from_relation(object) if object.is_a?(ActiveRecord::Relation)
-          super
+          serializer = clone
+
+          if object.is_a?(ActiveRecord::Relation)
+            serializer.extract_from_relation(
+              object
+            )
+          end
+
+          serializer.new(object)
         end
 
-        private
+        protected
 
         def extract_from_relation(relation)
           str_klass = relation.klass.name.demodulize
@@ -30,7 +40,9 @@ module API
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
-        "#{request.base_url}#{request.path}/#{represented.try(:id)}"
+        "#{request.base_url}#{request.script_name}/"\
+          "#{represented.class.name.demodulize.downcase}/"\
+          "#{represented.try(:id)}"
       end
     end
   end

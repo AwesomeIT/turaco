@@ -6,8 +6,6 @@ module API
       include Roar::Hypermedia
 
       class << self
-        # TODO: Add more declarations for different relationships,
-        # namely HABTM
         def inherited(child)
           super(child)
 
@@ -15,7 +13,7 @@ module API
           return unless klass.present?
 
           klass.reflections
-               .each_pair { |n, m| child.class_eval(generate_eval(n, m)) }
+               .each_pair { |n, m| child.class_eval(generate_eval(n, m).to_s) }
         end
 
         private
@@ -23,11 +21,12 @@ module API
         def generate_eval(name, meta)
           case meta
           when ActiveRecord::Reflection::BelongsToReflection
-            "property :#{name}, "\
+            "property :#{name.singularize}, "\
               "decorator: API::Entities::#{name.camelize}"
-          when ActiveRecord::Reflection::HasManyReflection
+          when ActiveRecord::Reflection::HasManyReflection,
+              ActiveRecord::Reflection::HasAndBelongsToManyReflection
             "collection :#{meta.plural_name}, "\
-              "extend: API::Entities::#{name.camelize}"
+              'decorator: API::Entities::Collection'
           else ''
           end
         end
