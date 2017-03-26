@@ -20,13 +20,13 @@ module API
 
         def generate_eval(name, meta)
           case meta
-          when ActiveRecord::Reflection::BelongsToReflection            
+          when ActiveRecord::Reflection::BelongsToReflection
             "property :#{name.singularize}, "\
               "decorator: API::Entities::#{name.camelize}"
-          when ActiveRecord::Reflection::HasManyReflection, 
+          when ActiveRecord::Reflection::HasManyReflection,
               ActiveRecord::Reflection::HasAndBelongsToManyReflection
             "collection :#{meta.plural_name}, "\
-              "decorator: API::Entities::Collection"
+              'decorator: API::Entities::Collection'
           else ''
           end
         end

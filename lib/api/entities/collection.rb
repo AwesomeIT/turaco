@@ -8,13 +8,15 @@ module API
       class << self
         # TODO: Find a better way to do this
         # If `representable` or `grape-roar` change their interfaces we are SOL
-        # with a breaking change if our lockfile fails us. 
+        # with a breaking change if our lockfile fails us.
         def represent(object, _options = {})
-          serializer = self.clone
+          serializer = clone
 
-          serializer.extract_from_relation(
-            object
-          ) if object.is_a?(ActiveRecord::Relation)
+          if object.is_a?(ActiveRecord::Relation)
+            serializer.extract_from_relation(
+              object
+            )
+          end
 
           serializer.new(object)
         end
@@ -41,6 +43,7 @@ module API
         "#{request.base_url}#{request.script_name}/"\
           "#{represented.class.name.demodulize.downcase}/"\
           "#{represented.try(:id)}"
-      end end
+      end
+    end
   end
 end
