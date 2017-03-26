@@ -12,7 +12,6 @@ module API
           klass = "Kagu::Models::#{child.to_s.demodulize}".safe_constantize
           return unless klass.present?
 
-          binding.pry if child.to_s.include?('Score')
           klass.reflections
                .each_pair { |n, m| child.class_eval(generate_eval(n, m).to_s) }
         end
@@ -27,7 +26,7 @@ module API
           when ActiveRecord::Reflection::HasManyReflection, 
               ActiveRecord::Reflection::HasAndBelongsToManyReflection
             "collection :#{meta.plural_name}, "\
-              "extend: API::Entities::Collection"
+              "decorator: API::Entities::Collection"
           else ''
           end
         end
