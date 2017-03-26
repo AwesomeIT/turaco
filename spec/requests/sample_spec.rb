@@ -61,7 +61,7 @@ describe 'Sample CRUD', type: :request do
         get '/v3/sample/'
       end
 
-      let!(:result) { JSON.parse(response.body) }
+      let(:result) { JSON.parse(response.body) }
 
       it 'should get all samples' do
         expect(result["samples"].count).to eql(15)
@@ -78,7 +78,7 @@ describe 'Sample CRUD', type: :request do
         delete "/v3/sample/#{sample.id}"
       end
 
-      let!(:result) { JSON.parse(response.body) }
+      let(:result) { JSON.parse(response.body) }
 
       it 'should have deleted the sample' do
         expect(response.code).to eql('204')
@@ -88,7 +88,7 @@ describe 'Sample CRUD', type: :request do
   end
 
   context 'UPDATE /sample' do
-    let! (:sample) { FactoryGirl.create(:sample) }
+    let!(:sample) { FactoryGirl.create(:sample) }
 
     context 'update a sample' do
       before do
@@ -99,7 +99,7 @@ describe 'Sample CRUD', type: :request do
         }
       end
 
-      let!(:result) { JSON.parse(response.body) }
+      let(:result) { JSON.parse(response.body) }
 
       it 'should have updated the sample' do
         expect(response.code).to eql('204')

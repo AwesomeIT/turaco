@@ -43,7 +43,7 @@ module API
       desc 'Retrieve a list of samples'
       get do
         status 200
-
+        
         present(
           ::Sample.all, with: Entities::Collection
         )
