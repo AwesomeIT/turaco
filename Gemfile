@@ -93,4 +93,9 @@ gem 'faker', '1.7.3'
 
 # Interface with AWS
 gem 'aws-sdk', '2.7.13'
+
+# .env provider
 gem 'dotenv-rails', '2.2.0'
+
+# Access token management
+gem 'doorkeeper', '4.2.5'
