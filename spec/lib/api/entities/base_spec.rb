@@ -13,6 +13,10 @@ describe API::Entities::Base, type: :request do
       get '/score' do
         present(Score.last, with: API::Entities::Score)
       end
+
+      get '/sample' do 
+        present(Sample.last, with: API::Entities::Sample)
+      end
     end
 
     Rails.application.routes.draw do
@@ -43,6 +47,18 @@ describe API::Entities::Base, type: :request do
         expect(results[r]['links'].first['href']).to eql(
           "http://www.example.com/v1/#{r}/#{score.send(r).id}"
         )
+      end
+    end
+
+    context 'serializing has many relationships' do 
+      let(:sample) { FactoryGirl.create(:sample) }
+      let!(:scores) { FactoryGirl.create_list(:score, 10, sample: sample)}
+
+      before { get '/v1/sample' }
+
+      it 'should display the correct resource URLs' do 
+        resources = %w(experiments scores)
+        expect(results.keys).to include(*resources)
       end
     end
   end
