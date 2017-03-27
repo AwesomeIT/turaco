@@ -3,7 +3,7 @@ module API
   class Root < Grape::API
     format :json
     formatter :json, Grape::Formatter::Roar
-    
+
     mount Endpoints::Score => '/score'
     mount Endpoints::Sample => '/sample'
     mount Endpoints::Experiment => '/experiment'

@@ -5,7 +5,7 @@ module API
       desc 'Record an experiment'
       params do
         requires :name, type: String, desc: 'Name of experiment'
-        requires :user_id, type: Integer, desc: 'ID of user creating exp'
+        requires :user_id, type: Integer, desc: 'ID of user creating experiment'
       end
       put do
         status 201
