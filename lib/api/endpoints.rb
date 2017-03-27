@@ -2,8 +2,10 @@
 module API
   module Endpoints
     extend ActiveSupport::Autoload
-    autoload :Score
-    autoload :Sample
+
+    autoload :Authorize
     autoload :Experiment
+    autoload :Sample
+    autoload :Score
   end
 end

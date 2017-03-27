@@ -4,9 +4,9 @@ module API
     extend ActiveSupport::Autoload
 
     autoload :Base
-    autoload :User
     autoload :Experiment
     autoload :Sample
     autoload :Score
+    autoload :User
   end
 end

@@ -85,9 +85,6 @@ gem 'pry-rails', '0.3.5'
 gem 'factory_girl', '4.8.0'
 gem 'factory_girl_rails', '4.8.0'
 
-# # Fancy ass errors
-# gem 'better_errors', '2.1.1'
-
 # Generate fixture strings, numbers, etc.
 gem 'faker', '1.7.3'
 

@@ -7,5 +7,6 @@ module API
     mount Endpoints::Score => '/score'
     mount Endpoints::Sample => '/sample'
     mount Endpoints::Experiment => '/experiment'
+    mount Endpoints::Authorize => '/authorize'
   end
 end
