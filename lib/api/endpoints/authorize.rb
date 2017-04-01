@@ -2,14 +2,19 @@
 module API
   module Endpoints
     class Authorize < Grape::API
-
       desc 'Authorize a user'
       params do 
         requires :email, type: String, desc: 'E-Mail of user'
         requires :password, type: String, desc: 'Plaintext password'
       end
       post '/user' do
+        token = env['warden'].authenticate(:user_grant)
+        error!(
+          { message: 'Error!', description: 'User login failed'}, 401
+        ) unless token.present?
 
+        status 200
+        present(token, with: Entities::Doorkeeper::Token)
       end
 
       desc 'Authorize an application'
@@ -26,9 +31,9 @@ module API
         )
         
         error!(
-          { message: 'Application grant unsuccessful' }, 403
+          { message: 'Error!',
+            description: 'Application grant unsuccessful' }, 401
         ) unless app.present?
-
 
         token = Doorkeeper::AccessToken.create!(
           application_id: app.id,
