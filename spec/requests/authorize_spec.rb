@@ -1,8 +1,6 @@
 require 'rails_helper'
 
 describe 'Token Management', type: :request do
-  include Warden::Test::Helpers
-
   let!(:user) { FactoryGirl.create(:user) }
   let(:application) { FactoryGirl.create(:application) }
 
@@ -65,7 +63,6 @@ describe 'Token Management', type: :request do
         expect(response.code).to eql('401')
       end
     end
-
 
     context 'with invalid credentials' do 
       let(:email) { 'steve@iluvbarnacles.com' }

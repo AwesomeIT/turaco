@@ -3,14 +3,15 @@ module API
   module Endpoints
     class Authorize < Grape::API
       desc 'Authorize a user'
-      params do 
+      params do
         requires :email, type: String, desc: 'E-Mail of user'
         requires :password, type: String, desc: 'Plaintext password'
       end
       post '/user' do
         token = env['warden'].authenticate(:user_grant)
+
         error!(
-          { message: 'Error!', description: 'User login failed'}, 401
+          { message: 'Error!', description: 'User login failed' }, 401
         ) unless token.present?
 
         status 200
@@ -18,7 +19,7 @@ module API
       end
 
       desc 'Authorize an application'
-      params do 
+      params do
         requires :client_id, type: String, desc: 'API Client ID'
         requires :client_secret, type: String, desc: 'API Client Secret'
       end
@@ -29,7 +30,7 @@ module API
           uid: declared_params[:client_id],
           secret: declared_params[:client_secret]
         )
-        
+
         error!(
           { message: 'Error!',
             description: 'Application grant unsuccessful' }, 401

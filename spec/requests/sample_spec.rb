@@ -4,6 +4,8 @@ describe 'Sample CRUD', type: :request do
   let(:user) { FactoryGirl.create(:user) }
   let(:attachment) { Rack::Test::UploadedFile.new(
     "./spec/support/sample.wav", "audio/wav") }
+
+  let(:app_token) { FactoryGirl.create(:app_token) }
   
   context 'PUT /sample' do 
     before do
@@ -16,7 +18,8 @@ describe 'Sample CRUD', type: :request do
         file: attachment,
         low_label: 'not R',
         high_label: 'R'
-      }
+      }, 
+      headers: { 'Turaco-Api-Key' => app_token.token }
     end
 
     let(:result) { JSON.parse(response.body) }
@@ -32,7 +35,11 @@ describe 'Sample CRUD', type: :request do
     end
 
     context 'with invalid/missing parameters' do 
-      before { put '/v3/sample', params: { user_id: user.id } }
+      before do
+        put '/v3/sample', params: { user_id: user.id }, headers: { 
+          'Turaco-Api-Key' => app_token.token 
+        }
+      end
 
       it 'should enforce required' do 
         expect(response.code).to eql('400')
@@ -46,7 +53,8 @@ describe 'Sample CRUD', type: :request do
 
     context 'get single sample' do
       before do
-        get "/v3/sample/#{samples.first.id}"
+        get "/v3/sample/#{samples.first.id}", 
+          headers: { 'Turaco-Api-Key' => app_token.token }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -58,7 +66,8 @@ describe 'Sample CRUD', type: :request do
 
     context 'get all samples' do
       before do
-        get '/v3/sample/'
+        get '/v3/sample/',
+          headers: { 'Turaco-Api-Key' => app_token.token }
       end
 
       let(:result) { JSON.parse(response.body) }
@@ -75,7 +84,8 @@ describe 'Sample CRUD', type: :request do
 
     context 'delete a sample' do
       before do
-        delete "/v3/sample/#{sample.id}"
+        delete "/v3/sample/#{sample.id}",
+          headers: { 'Turaco-Api-Key' => app_token.token }
       end
 
       let(:result) { JSON.parse(response.body) }
@@ -96,7 +106,8 @@ describe 'Sample CRUD', type: :request do
         params: {
           user_id: user.id,
           name: 'new_name'
-        }
+        },
+        headers: { 'Turaco-Api-Key' => app_token.token }
       end
 
       let(:result) { JSON.parse(response.body) }

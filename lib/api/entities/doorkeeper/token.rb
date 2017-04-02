@@ -7,10 +7,10 @@ module API
         include Roar::Hypermedia
 
         %i(
-         created_at
-         expires_in
-         scopes
-         token
+          created_at
+          expires_in
+          scopes
+          token
         ).each(&method(:property))
       end
     end

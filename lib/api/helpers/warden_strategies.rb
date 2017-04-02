@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module API
   module Helpers
     module WardenStrategies
@@ -5,13 +6,11 @@ module API
         def authenticate!
           user = User.find_by(email: params['email'])
           return fail!(:not_found) unless user.present?
+          return fail!(
+            :unsuccessful_login
+          ) unless user.valid_password?(params['password'])
 
-
-          if user.valid_password?(params['password'])
-            success!(Doorkeeper::AccessToken.create(resource_owner_id: user.id))
-          else
-            return fail!(:unsuccessful_login)
-          end
+          success!(Doorkeeper::AccessToken.create(resource_owner_id: user.id))
         end
       end
     end

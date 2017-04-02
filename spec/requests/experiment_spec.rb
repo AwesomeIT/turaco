@@ -3,6 +3,7 @@ require 'rails_helper'
 describe 'Experiment CRUD', type: :request do 
   
   let!(:user) { FactoryGirl.create(:user) }
+  let(:app_token) { FactoryGirl.create(:app_token) }
 
   context 'PUT /experiment' do 
     before do
@@ -10,7 +11,8 @@ describe 'Experiment CRUD', type: :request do
       params: { 
         name: 'name',
         user_id: user.id
-      }
+      },
+      headers: { 'Turaco-Api-Key' => app_token.token }
     end
     let(:result) { JSON.parse(response.body) }
 
@@ -24,7 +26,8 @@ describe 'Experiment CRUD', type: :request do
 
     context 'delete an experiment' do
       before do
-        delete "/v3/experiment/#{experiment.id}"
+        delete "/v3/experiment/#{experiment.id}",
+          headers: { 'Turaco-Api-Key' => app_token.token }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -44,7 +47,8 @@ describe 'Experiment CRUD', type: :request do
         put "/v3/experiment/#{experiment.id}",
         params: {
           name: 'new_name'
-        }
+        },
+        headers: { 'Turaco-Api-Key' => app_token.token }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -61,7 +65,8 @@ describe 'Experiment CRUD', type: :request do
 
     context 'get single experiment' do
       before do
-        get "/v3/experiment/#{experiments.first.id}"
+        get "/v3/experiment/#{experiments.first.id}",
+          headers: { 'Turaco-Api-Key' => app_token.token }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -72,7 +77,10 @@ describe 'Experiment CRUD', type: :request do
     end
 
     context 'with no filters' do
-      before { get '/v3/experiment' }
+      before do 
+        get '/v3/experiment',
+          headers: { 'Turaco-Api-Key' => app_token.token }
+      end
 
       let(:results) { JSON.parse(response.body) }
 
@@ -87,7 +95,9 @@ describe 'Experiment CRUD', type: :request do
         experiments.last.name = 'foobar'
         experiments.last.save
 
-        get '/v3/experiment', params: { name: 'foobar' }
+        get '/v3/experiment', params: { name: 'foobar' }, headers: { 
+          'Turaco-Api-Key' => app_token.token 
+        }
       end
 
       let(:results) { JSON.parse(response.body) }
