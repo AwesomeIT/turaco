@@ -85,12 +85,14 @@ gem 'pry-rails', '0.3.5'
 gem 'factory_girl', '4.8.0'
 gem 'factory_girl_rails', '4.8.0'
 
-# # Fancy ass errors
-# gem 'better_errors', '2.1.1'
-
 # Generate fixture strings, numbers, etc.
 gem 'faker', '1.7.3'
 
 # Interface with AWS
 gem 'aws-sdk', '2.7.13'
+
+# .env provider
 gem 'dotenv-rails', '2.2.0'
+
+# Access token management
+gem 'doorkeeper', '4.2.5'
