@@ -56,6 +56,10 @@ describe 'Token Management', type: :request do
       ).to be(true)
     end
 
+    it 'should include all roles the user has as scopes' do 
+      expect(results.fetch('scopes')).to eql(user.roles.pluck(:name))
+    end
+
     context 'no token' do 
       let(:app_token) { OpenStruct.new(token: nil) }
 

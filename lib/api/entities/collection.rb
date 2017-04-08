@@ -12,11 +12,9 @@ module API
         def represent(object, _options = {})
           serializer = clone
 
-          if object.is_a?(ActiveRecord::Relation)
-            serializer.extract_from_relation(
-              object
-            )
-          end
+          serializer.extract_from_relation(
+            object
+          ) if object.is_a?(ActiveRecord::Relation)
 
           serializer.new(object)
         end

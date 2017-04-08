@@ -10,7 +10,10 @@ module API
             :unsuccessful_login
           ) unless user.valid_password?(params['password'])
 
-          success!(Doorkeeper::AccessToken.create(resource_owner_id: user.id))
+          success!(Doorkeeper::AccessToken.create(
+            resource_owner_id: user.id,
+            scopes: user.roles.pluck(:name).join(' ')
+          ))
         end
       end
     end
