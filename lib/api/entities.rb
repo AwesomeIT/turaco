@@ -4,6 +4,8 @@ module API
     extend ActiveSupport::Autoload
 
     autoload :Base
+    autoload :Collection
+    autoload :Doorkeeper
     autoload :Experiment
     autoload :Sample
     autoload :Score
