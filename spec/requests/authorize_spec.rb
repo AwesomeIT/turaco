@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-describe 'Token Management', type: :request do
+xdescribe 'Token Management', type: :request do
   let!(:user) { FactoryGirl.create(:user) }
   let(:application) { FactoryGirl.create(:application) }
 
