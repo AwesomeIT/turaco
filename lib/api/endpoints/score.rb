@@ -4,10 +4,6 @@ module API
     class Score < Grape::API
       helpers Doorkeeper::Grape::Helpers
 
-      before do 
-        doorkeeper_authorize!
-      end
-
       desc 'Record a score'
       route_setting :scopes, %w(participant)
       params do

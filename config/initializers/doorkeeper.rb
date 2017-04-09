@@ -2,9 +2,14 @@ Doorkeeper.configure do
   # Change the ORM that doorkeeper will use (needs plugins)
   orm :active_record
 
+  # Disable the OAuth admin panel
+  admin_authenticator do 
+    redirect_to(new_user_session_url) unless Rails.env.development?
+  end
+
   # Use Devise for current_user
   resource_owner_authenticator do
-    current_user || redirect_to(login_url)
+    current_user || redirect_to(new_user_session_url)
   end
 
   optional_scopes :administrator, :researcher, :participant
