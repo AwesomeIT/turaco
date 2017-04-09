@@ -3,6 +3,7 @@ module API
   module Endpoints
     class Experiment < Grape::API
       desc 'Record an experiment'
+      route_setting :scopes, %w(administrator researcher)
       params do
         requires :name, type: String, desc: 'Name of experiment'
         requires :user_id, type: Integer, desc: 'ID of user creating experiment'
@@ -45,6 +46,7 @@ module API
       end
 
       desc 'Delete an experiment'
+      route_setting :scopes, %w(administrator researcher)
       params do
         requires :id, type: Integer, desc: 'ID of experiment'
       end
@@ -55,6 +57,7 @@ module API
       end
 
       desc 'Update an experiment'
+      route_setting :scopes, %w(administrator researcher)
       params do
         requires :id, type: Integer, desc: 'ID of experiment to be updated'
         optional :name, type: String, desc: 'Name of the experiment'
