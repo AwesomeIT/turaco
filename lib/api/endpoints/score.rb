@@ -2,7 +2,14 @@
 module API
   module Endpoints
     class Score < Grape::API
+      helpers Doorkeeper::Grape::Helpers
+
+      before do 
+        doorkeeper_authorize!
+      end
+
       desc 'Record a score'
+      route_setting :scopes, %w(participant)
       params do
         requires :user_id, type: Integer, desc: 'ID of user'
         requires :experiment_id, type: Integer, desc: 'ID of experiment'
