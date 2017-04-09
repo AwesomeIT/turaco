@@ -9,7 +9,7 @@ module API
     format :json
     formatter :json, Grape::Formatter::Roar
 
-    before do 
+    before do
       doorkeeper_authorize! unless Rails.env.test?
     end
 

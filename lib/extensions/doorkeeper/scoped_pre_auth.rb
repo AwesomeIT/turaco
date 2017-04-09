@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Extensions
   module Doorkeeper
     class ScopedPreAuth < ::Doorkeeper::OAuth::PreAuthorization
