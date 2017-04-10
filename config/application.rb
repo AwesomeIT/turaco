@@ -28,6 +28,6 @@ module Turaco
     require 'roar/json/hal'
 
     # Our API is actually in the lib directory
-    config.autoload_paths << "#{Rails.root}/lib"
+    config.eager_load_paths << "#{Rails.root}/lib"
   end
 end
