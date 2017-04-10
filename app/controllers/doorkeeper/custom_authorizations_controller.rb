@@ -11,7 +11,7 @@ module Doorkeeper
     def pre_auth
       @pre_auth ||= begin
         params[:current_user] = current_user
-        Extensions::Doorkeeper::ScopedPreAuth.new(
+        ::Extensions::Doorkeeper::ScopedPreAuth.new(
           Doorkeeper.configuration,
           server.client_via_uid,
           params
