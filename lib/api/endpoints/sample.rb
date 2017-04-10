@@ -3,6 +3,7 @@ module API
   module Endpoints
     class Sample < Grape::API
       desc 'Record a sample'
+      route_setting :scopes, %w(administrator researcher)
       params do
         requires :user_id, type: Integer, desc: 'ID of user'
         requires :name, type: String, desc: 'name of sample'
@@ -50,6 +51,7 @@ module API
       end
 
       desc 'Delete a sample'
+      route_setting :scopes, %w(administrator researcher)
       params do
         requires :id, type: Integer, desc: 'ID of sample'
       end
@@ -60,6 +62,7 @@ module API
       end
 
       desc 'Update a sample'
+      route_setting :scopes, %w(administrator researcher)
       params do
         requires :id, type: Integer, desc: 'ID of sample to be updated'
         optional :name, type: String, desc: 'name of sample'

@@ -15,6 +15,17 @@ en:
               secured_uri: 'must be an HTTPS/SSL URI.'
 
   doorkeeper:
+    scopes:
+      administrator: |
+        Modify all platform data, users, and applications
+      researcher: |
+        View and modify your own experiments.
+        View public experiments.
+        Modify samples
+      participant: |
+        Participate in experiments.
+        Score samples in experiments
+
     applications:
       confirmations:
         destroy: 'Are you sure?'
@@ -55,10 +66,23 @@ en:
         title: 'An error has occurred'
       new:
         title: 'Authorization required'
-        prompt: 'Authorize %{client_name} to use your account?'
-        able_to: 'This application will be able to'
+        prompt: 'Allow %{client_name} to use your account on the TalkBirdy platform?'
+        able_to: 'The application will allow you to'
+        what_is_oauth:
+          title: 'What is this?'
+          desc: |
+            An application has asked for permission to access 
+            the TalkBirdy platform and its data. This dialog box is designed to 
+            show you the actions you are allowing this application to perform on
+            your behalf. An application will never prompt you for your credentials
+            directly, and you should never enter your TalkBirdy credentials anywhere
+            but directly on a platform prompt. 
       show:
-        title: 'Authorization code'
+        title: 'Authorization success'
+        desc: |
+          The redirect_url for this application is configured to perform an 
+          out-of-band request. Instead of redirecting to your application, 
+          we respond with this code.
 
     authorized_applications:
       confirmations:
@@ -121,4 +145,4 @@ en:
           applications: 'Applications'
           home: 'Home'
       application:
-        title: 'OAuth authorization required'
+        title: 'Authorization Required'

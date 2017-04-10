@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module API
   module Entities
-    class Collection < Grape::Roar::Decorator
+    class Collection < Base
       include Roar::JSON
       include Roar::Hypermedia
 
@@ -12,11 +12,9 @@ module API
         def represent(object, _options = {})
           serializer = clone
 
-          if object.is_a?(ActiveRecord::Relation)
-            serializer.extract_from_relation(
-              object
-            )
-          end
+          serializer.extract_from_relation(
+            object
+          ) if object.is_a?(ActiveRecord::Relation)
 
           serializer.new(object)
         end
@@ -36,13 +34,6 @@ module API
             -> { self }
           )
         end
-      end
-
-      link :self do |opts|
-        request = Grape::Request.new(opts[:env])
-        "#{request.base_url}#{request.script_name}/"\
-          "#{represented.class.name.demodulize.downcase}/"\
-          "#{represented.try(:id)}"
       end
     end
   end

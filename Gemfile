@@ -96,3 +96,5 @@ gem 'dotenv-rails', '2.2.0'
 
 # Access token management
 gem 'doorkeeper', '4.2.5'
+
+gem 'bootstrap_form', '2.6.0'

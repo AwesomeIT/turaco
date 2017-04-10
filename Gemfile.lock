@@ -1,13 +1,13 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: c1abab730206b2edd437c6b2c37681cabb95a5b5
+  revision: 1ae016d724b9838347625f9e079727bd960e1879
   specs:
-    kagu (0.0.14)
+    kagu (0.0.18)
       activerecord
       activesupport
       devise
       pg
-      rake
+      rake (~> 10.0)
 
 GEM
   remote: https://rubygems.org/
@@ -64,6 +64,7 @@ GEM
       ice_nine (~> 0.11.0)
       thread_safe (~> 0.3, >= 0.3.1)
     bcrypt (3.1.11)
+    bootstrap_form (2.6.0)
     builder (3.2.3)
     byebug (9.0.6)
     coderay (1.1.1)
@@ -221,7 +222,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.2.1)
-    rake (12.0.0)
+    rake (10.5.0)
     rb-fsevent (0.9.8)
     rb-inotify (0.9.8)
       ffi (>= 0.5.0)
@@ -316,6 +317,7 @@ PLATFORMS
 
 DEPENDENCIES
   aws-sdk (= 2.7.13)
+  bootstrap_form (= 2.6.0)
   byebug
   coffee-rails (~> 4.2)
   devise (= 4.2.0)
