@@ -29,6 +29,5 @@ module Turaco
 
     # Our API is actually in the lib directory
     config.autoload_paths << "#{Rails.root}/lib"
-    config.autoload_paths << "#{Rails.root}/lib/*/**"
   end
 end
