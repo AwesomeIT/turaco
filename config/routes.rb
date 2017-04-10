@@ -5,5 +5,7 @@ Rails.application.routes.draw do
   root 'doorkeeper/applications#index'
 
   devise_for :users
-  use_doorkeeper
+  use_doorkeeper do
+    controllers authorizations: 'doorkeeper/custom_authorizations'
+  end
 end

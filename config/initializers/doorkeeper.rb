@@ -20,18 +20,3 @@ Doorkeeper.configure do
   # Only grant for OAuth
   grant_flows %w(authorization_code)
 end
-
-module ScopedPreAuthExtension
-  def pre_auth
-    @pre_auth ||= begin
-      params[:current_user] = current_user
-      Extensions::Doorkeeper::ScopedPreAuth.new(
-        Doorkeeper.configuration,
-        server.client_via_uid,
-        params
-      )
-    end
-  end
-end
-
-::Doorkeeper::AuthorizationsController.prepend(ScopedPreAuthExtension)
