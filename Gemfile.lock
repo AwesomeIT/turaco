@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: 1ae016d724b9838347625f9e079727bd960e1879
+  revision: b3225850fb59c10721ab37db1081136f549210ff
   specs:
-    kagu (0.0.18)
+    kagu (0.0.19)
       activerecord
       activesupport
       devise
@@ -351,6 +351,9 @@ DEPENDENCIES
   tzinfo-data
   uglifier (>= 1.3.0)
   web-console (>= 3.3.0)
+
+RUBY VERSION
+   ruby 2.4.0p0
 
 BUNDLED WITH
    1.14.6

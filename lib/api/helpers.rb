@@ -3,6 +3,6 @@ module API
   module Helpers
     extend ActiveSupport::Autoload
 
-    autoload :WardenStrategies
+    autoload :Doorkeeper
   end
 end

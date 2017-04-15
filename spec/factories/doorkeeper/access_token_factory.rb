@@ -4,8 +4,9 @@ FactoryGirl.define do
     application
   end
 
-  factory :user_token, class: Doorkeeper::AccessToken do
+  factory :oauth_token, class: Doorkeeper::AccessToken do 
     token { Faker::Crypto.sha1 }
-    association :resource_owner_id, factory: :user
+    application
+    resource_owner_id { FactoryGirl.create(:user).id }
   end
 end
