@@ -26,6 +26,63 @@ describe 'Application CRUD', type: :request do
     end
   end
 
+  context 'POST /application/:id' do 
+    let(:owner) { FactoryGirl.create(:researcher_user) }
+    let(:application) { FactoryGirl.create(:application, user: owner) }
+    let(:token) do
+      FactoryGirl.create(:oauth_token, resource_owner_id: owner.id)
+    end
+
+    let(:new_name) { 'foobarbazbar' }
+
+    before do
+      post "/v3/application/#{application.id}",
+        params: { name: new_name },
+        headers: {
+          Authorization: "Bearer #{token.token}"
+        }
+    end
+
+    it 'should update the application' do 
+      application.reload
+      expect(response.code).to eql('204')
+      expect(application.name).to eql(new_name)
+    end
+  end
+
+  context 'GET /application/:id' do
+    let(:owner) { FactoryGirl.create(:researcher_user) }
+    let(:application) { FactoryGirl.create(:application, user: owner) }
+    let(:token) do
+      FactoryGirl.create(:oauth_token, resource_owner_id: owner.id)
+    end
+
+    before do
+      get "/v3/application/#{application.id}",
+        headers: {
+          Authorization: "Bearer #{token.token}"
+        }
+    end
+
+    it 'can find the created application for the owner user' do
+      expect(response.code).to eql('200') 
+      expect(result['id']).to eql(application.id)
+    end
+
+    context 'as another user' do
+      let(:token) do
+        FactoryGirl.create(
+          :oauth_token,
+          resource_owner_id: FactoryGirl.create(:researcher_user).id
+        )
+      end
+
+      it 'should 404' do
+        expect(response.code).to eql('404') 
+      end 
+    end
+  end
+
   context 'GET /application' do
     let(:owner_user) { FactoryGirl.create(:researcher_user) }
     let!(:applications) do 

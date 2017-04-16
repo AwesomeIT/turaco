@@ -10,6 +10,15 @@ module API
     format :json
     formatter :json, Grape::Formatter::Roar
 
+    # TODO: Break out into its own module and handle
+    # all race conditions and errors
+    rescue_from ActiveRecord::RecordNotFound do |_e|
+      rack_response(
+        { message: 'Error!',
+          description: 'Could not find requested resource' }, 404
+      )
+    end
+
     before do
       doorkeeper_authorize! unless Rails.env.test?
     end
