@@ -24,7 +24,7 @@ module API
       end
 
       desc 'Retrieve applications'
-      route_setting :scopes, %(administrator)
+      route_setting :scopes, %(administrator researcher)
       get authorize: [:read, Doorkeeper::Application] do
         status 200 
         present(

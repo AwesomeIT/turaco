@@ -42,34 +42,31 @@ describe 'Application CRUD', type: :request do
       end
     end
 
+    let(:token) { oauth_token }
+
     before do
       get '/v3/application',
         headers: {
-          Authorization: "Bearer #{oauth_token.token}"
+          Authorization: "Bearer #{token.token}"
         }
     end
 
     context 'as an administrator' do
-      before do
-        oauth_token.resource_owner_id = admin_user.id
-        oauth_token.save 
-      end
-
       it 'will list all applications' do
         expect(response.status).to eql(200)
         expect(result['applications'].map { |r| r['id'].to_i })
-          .to match(applications.pluck(:id))
+          .to include(*applications.pluck(:id))
       end
     end
 
     context 'as another user' do
-      before do
-        oauth_token.resource_owner_id = other_user.id
-        oauth_token.save 
+      let(:token) do
+        FactoryGirl.create(:oauth_token, resource_owner_id: other_user.id)
       end
 
       it 'will list all applications' do
         expect(response.status).to eql(200)
+        expect(result['applications'].count).to eql(1)
         expect(result['applications'].map { |r| r['id'].to_i })
           .to include(applications.last.id)
       end
