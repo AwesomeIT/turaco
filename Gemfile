@@ -100,3 +100,6 @@ gem 'dotenv-rails', '2.2.0'
 gem 'doorkeeper', '4.2.5'
 
 gem 'bootstrap_form', '2.6.0'
+
+# CORS management
+gem 'rack-cors', '0.4.1', require: 'rack/cors'

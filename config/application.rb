@@ -29,5 +29,13 @@ module Turaco
 
     # Our API is actually in the lib directory
     config.eager_load_paths << "#{Rails.root}/lib"
+
+    # TODO: revisit CORS permissions
+    config.middleware.insert_before 0, Rack::Cors do
+      allow do
+        origins '*'
+        resource '*', :headers => :any, :methods => [:get, :post, :options]
+      end
+    end
   end
 end
