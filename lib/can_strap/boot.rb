@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CanStrap
   module Boot
     class << self
@@ -17,9 +18,8 @@ module CanStrap
             # Apply roles
             user.roles.pluck(:name).each do |role|
               instance_exec(user, &"CanStrap::Abilities::#{role.camelize}"
-                .safe_constantize.try(:permissions)
-              )
-            end 
+                .safe_constantize.try(:permissions))
+            end
           end
         end
       end

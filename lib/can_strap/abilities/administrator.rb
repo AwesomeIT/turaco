@@ -1,7 +1,8 @@
+# frozen_string_literal: true
 module CanStrap
   module Abilities
     class Administrator < Base
-      define_permissions do 
+      define_permissions do
         # Applications
         can :write, Doorkeeper::Application
         can :read, Doorkeeper::Application

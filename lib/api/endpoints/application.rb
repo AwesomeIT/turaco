@@ -26,7 +26,7 @@ module API
       desc 'Retrieve applications'
       route_setting :scopes, %(administrator researcher)
       get authorize: [:read, Doorkeeper::Application] do
-        status 200 
+        status 200
         present(
           Doorkeeper::Application.accessible_by(current_ability),
           with: Entities::Collection
