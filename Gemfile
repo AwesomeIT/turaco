@@ -39,6 +39,7 @@ gem 'turbolinks', '~> 5'
 group :development, :test do
   gem 'byebug', platform: :mri
   gem 'guard-rubocop'
+  gem 'database_cleaner'
   gem 'jbuilder', '~> 2.5'
 end
 
@@ -99,4 +100,9 @@ gem 'dotenv-rails', '2.2.0'
 # Access token management
 gem 'doorkeeper', '4.2.5'
 
+# Bootstrap formage
 gem 'bootstrap_form', '2.6.0'
+
+# Role management
+gem 'cancancan', '1.16.0'
+gem 'grape-cancan', '0.0.2'
