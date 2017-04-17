@@ -106,3 +106,6 @@ gem 'bootstrap_form', '2.6.0'
 # Role management
 gem 'cancancan', '1.16.0'
 gem 'grape-cancan', '0.0.2'
+
+# CORS management
+gem 'rack-cors', '0.4.1', require: 'rack/cors'
