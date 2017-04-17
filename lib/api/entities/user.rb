@@ -2,6 +2,7 @@
 module API
   module Entities
     class User < Base
+      property :email
     end
   end
 end

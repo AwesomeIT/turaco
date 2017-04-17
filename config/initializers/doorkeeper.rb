@@ -10,7 +10,6 @@ Doorkeeper.configure do
   # Use Devise for current_user
   resource_owner_authenticator do
     session[:previous_url] = request.fullpath
-    
     current_user || redirect_to(new_user_session_url)
   end
 
@@ -19,4 +18,9 @@ Doorkeeper.configure do
 
   # Only grant for OAuth
   grant_flows %w(authorization_code)
+
+  # Patch additional relationship into model
+  class Doorkeeper::Application < ActiveRecord::Base
+    belongs_to :user, class_name: User
+  end 
 end
