@@ -2,7 +2,7 @@
 module API
   extend ActiveSupport::Autoload
 
+  autoload :Endpoints
   autoload :Entities
   autoload :Root
-  autoload :Endpoints
 end

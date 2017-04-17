@@ -15,7 +15,7 @@ module API
     rescue_from ActiveRecord::RecordNotFound do |_e|
       rack_response(
         { message: 'Error!',
-          description: 'Could not find requested resource' }, 404
+          description: 'Could not find requested resource' }.to_json, 404
       )
     end
 
@@ -27,5 +27,6 @@ module API
     mount Endpoints::Experiment => '/experiment'
     mount Endpoints::Sample => '/sample'
     mount Endpoints::Score => '/score'
+    mount Endpoints::User => '/user'
   end
 end

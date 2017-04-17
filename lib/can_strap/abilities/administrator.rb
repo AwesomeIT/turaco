@@ -19,8 +19,8 @@ module CanStrap
         can :read, Score
 
         # Users
-        can :read, User
-        can :write, User
+        can :read, ::User
+        can :write, ::User
       end
     end
   end

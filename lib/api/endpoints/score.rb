@@ -2,8 +2,6 @@
 module API
   module Endpoints
     class Score < Grape::API
-      helpers Doorkeeper::Grape::Helpers
-
       desc 'Record a score'
       route_setting :scopes, %w(participant)
       params do

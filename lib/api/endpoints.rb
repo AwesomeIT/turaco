@@ -7,5 +7,6 @@ module API
     autoload :Experiment
     autoload :Sample
     autoload :Score
+    autoload :User
   end
 end
