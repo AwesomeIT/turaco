@@ -2,6 +2,9 @@
 module API
   module Endpoints
     class Score < Grape::API
+      resource :scores
+      authorize_routes!
+
       desc 'Record a score'
       route_setting :scopes, %w(participant)
       params do
@@ -10,7 +13,7 @@ module API
         requires :sample_id, type: Integer, desc: 'ID of sample'
         requires :rating, type: Float, desc: 'rating assigned to sample'
       end
-      put do
+      put authorize: [:write, ::Score] do
         status 201
         present(
           ::Score.create(
