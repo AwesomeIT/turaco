@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module CanStrap
   module Abilities
     class Participant < Base
