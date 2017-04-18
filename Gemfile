@@ -109,3 +109,5 @@ gem 'grape-cancan', '0.0.2'
 
 # CORS management
 gem 'rack-cors', '0.4.1', require: 'rack/cors'
+
+gem 'baby_squeel', '1.1.4', require: 'baby_squeel'

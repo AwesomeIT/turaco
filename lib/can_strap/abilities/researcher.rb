@@ -12,12 +12,14 @@ module CanStrap
         can :read, Experiment, user_id: user.id
 
         # Samples
-        can :write, Sample, Sample.where(
-          'private = false OR user_id = ?', user.id
-        )
-        can :read, Sample, Sample.where(
-          'private = false OR user_id = ?', user.id
-        )
+        # can :write, Sample, Sample.where(
+        #   'private = false OR user_id = ?', user.id
+        # )
+        # can :read, Sample, Sample.where(
+        #   'private = false OR user_id = ?', user.id
+        # )
+        can :write, Sample, Sample.where.has { (private == false) | (user_id == user.id) }
+        can :read, Sample, Sample.where.has { (private == false) | (user_id == user.id) }
 
         # Score (tbd)
         can :read, Score

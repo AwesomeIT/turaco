@@ -2,6 +2,9 @@
 module API
   module Endpoints
     class Sample < Grape::API
+      resource :samples
+      authorize_routes!
+
       desc 'Record a sample'
       route_setting :scopes, %w(administrator researcher)
       params do
@@ -12,7 +15,7 @@ module API
         requires :low_label, type: String, desc: 'left of rating scale'
         requires :high_label, type: String, desc: 'right of rating scale'
       end
-      put do
+      put authorize: [:write, ::Sample] do
         status 201
 
         s3_url = Adapters::S3.upload_file(
@@ -32,7 +35,7 @@ module API
       params do
         requires :id, type: Integer, desc: 'ID of sample'
       end
-      get '/:id' do
+      get '/:id', authorize: [:read, ::Sample] do
         status 200
 
         present(
@@ -42,7 +45,7 @@ module API
       end
 
       desc 'Retrieve a list of samples'
-      get do
+      get authorize: [:read, ::Sample] do
         status 200
 
         present(
@@ -55,7 +58,7 @@ module API
       params do
         requires :id, type: Integer, desc: 'ID of sample'
       end
-      delete '/:id' do
+      delete '/:id', authorize: [:write, ::Sample] do
         status 204
 
         ::Sample.delete(declared(params)[:id])
@@ -68,7 +71,7 @@ module API
         optional :name, type: String, desc: 'name of sample'
         optional :private, type: Boolean, desc: 'flag for sample sharing'
       end
-      put '/:id' do
+      put '/:id', authorize: [:write, ::Sample] do
         status 204
 
         present(
