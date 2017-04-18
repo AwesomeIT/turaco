@@ -2,13 +2,16 @@
 module API
   module Endpoints
     class Experiment < Grape::API
+      resource :experiments
+      authorize_routes!
+
       desc 'Record an experiment'
       route_setting :scopes, %w(administrator researcher)
       params do
         requires :name, type: String, desc: 'Name of experiment'
         requires :user_id, type: Integer, desc: 'ID of user creating experiment'
       end
-      put do
+      put authorize: [:write, ::Experiment] do
         status 201
 
         present(
@@ -22,7 +25,7 @@ module API
       params do
         requires :id, type: Integer, desc: 'ID of experiment'
       end
-      get '/:id' do
+      get '/:id', authorize: [:read, ::Experiment] do
         status 200
 
         present(
@@ -36,7 +39,7 @@ module API
         optional :name, type: String, desc: 'Name of the experiment'
         optional :active, type: Boolean, desc: 'Active flag for experiments'
       end
-      get do
+      get authorize: [:read, ::Experiment] do
         status 200
 
         present(
@@ -50,7 +53,7 @@ module API
       params do
         requires :id, type: Integer, desc: 'ID of experiment'
       end
-      delete '/:id' do
+      delete '/:id', authorize: [:write, ::Experiment] do
         status 204
 
         ::Experiment.delete(declared(params)[:id])
@@ -63,7 +66,7 @@ module API
         optional :name, type: String, desc: 'Name of the experiment'
         optional :active, type: Boolean, desc: 'Flag for experiment being used'
       end
-      put '/:id' do
+      put '/:id', authorize: [:write, ::Experiment] do
         status 204
 
         present(
