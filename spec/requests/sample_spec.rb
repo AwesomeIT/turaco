@@ -1,11 +1,11 @@
 require 'rails_helper'
 
 describe 'Sample CRUD', type: :request do 
-  let(:user) { FactoryGirl.create(:user) }
+  let(:user) { FactoryGirl.create(:researcher_user) }
   let(:attachment) { Rack::Test::UploadedFile.new(
     "./spec/support/sample.wav", "audio/wav") }
 
-  let(:app_token) { FactoryGirl.create(:app_token) }
+  let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
   
   context 'PUT /sample' do 
     before do
@@ -19,7 +19,7 @@ describe 'Sample CRUD', type: :request do
         low_label: 'not R',
         high_label: 'R'
       }, 
-      headers: { 'Turaco-Api-Key' => app_token.token }
+      headers: { 'Authorization' => "Bearer #{token.token}" }
     end
 
     let(:result) { JSON.parse(response.body) }
@@ -37,7 +37,7 @@ describe 'Sample CRUD', type: :request do
     context 'with invalid/missing parameters' do 
       before do
         put '/v3/sample', params: { user_id: user.id }, headers: { 
-          'Turaco-Api-Key' => app_token.token 
+          'Authorization' => "Bearer #{token.token}" 
         }
       end
 
@@ -54,7 +54,7 @@ describe 'Sample CRUD', type: :request do
     context 'get single sample' do
       before do
         get "/v3/sample/#{samples.first.id}", 
-          headers: { 'Turaco-Api-Key' => app_token.token }
+          headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -67,7 +67,7 @@ describe 'Sample CRUD', type: :request do
     context 'get all samples' do
       before do
         get '/v3/sample/',
-          headers: { 'Turaco-Api-Key' => app_token.token }
+          headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let(:result) { JSON.parse(response.body) }
@@ -85,7 +85,7 @@ describe 'Sample CRUD', type: :request do
     context 'delete a sample' do
       before do
         delete "/v3/sample/#{sample.id}",
-          headers: { 'Turaco-Api-Key' => app_token.token }
+          headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let(:result) { JSON.parse(response.body) }
@@ -107,7 +107,7 @@ describe 'Sample CRUD', type: :request do
           user_id: user.id,
           name: 'new_name'
         },
-        headers: { 'Turaco-Api-Key' => app_token.token }
+        headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let(:result) { JSON.parse(response.body) }

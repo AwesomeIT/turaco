@@ -43,6 +43,11 @@ group :development, :test do
   gem 'jbuilder', '~> 2.5'
 end
 
+group :test do
+  gem "simplecov"
+  gem "codeclimate-test-reporter", "~> 1.0.0"
+end
+
 group :development do
   # Access an IRB console on exception pages or by
   # using <%= console %> anywhere in the code.
@@ -109,3 +114,6 @@ gem 'grape-cancan', '0.0.2'
 
 # CORS management
 gem 'rack-cors', '0.4.1', require: 'rack/cors'
+
+# Sexier queries
+gem 'baby_squeel', '1.1.4', require: 'baby_squeel'

@@ -2,8 +2,8 @@ require 'rails_helper'
 
 describe 'Experiment CRUD', type: :request do 
   
-  let!(:user) { FactoryGirl.create(:user) }
-  let(:app_token) { FactoryGirl.create(:app_token) }
+  let!(:user) { FactoryGirl.create(:researcher_user) }
+  let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
 
   context 'PUT /experiment' do 
     before do
@@ -12,7 +12,7 @@ describe 'Experiment CRUD', type: :request do
         name: 'name',
         user_id: user.id
       },
-      headers: { 'Turaco-Api-Key' => app_token.token }
+      headers: { 'Authorization' => "Bearer #{token.token}" }
     end
     let(:result) { JSON.parse(response.body) }
 
@@ -27,7 +27,7 @@ describe 'Experiment CRUD', type: :request do
     context 'delete an experiment' do
       before do
         delete "/v3/experiment/#{experiment.id}",
-          headers: { 'Turaco-Api-Key' => app_token.token }
+          headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -48,7 +48,7 @@ describe 'Experiment CRUD', type: :request do
         params: {
           name: 'new_name'
         },
-        headers: { 'Turaco-Api-Key' => app_token.token }
+        headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -66,7 +66,7 @@ describe 'Experiment CRUD', type: :request do
     context 'get single experiment' do
       before do
         get "/v3/experiment/#{experiments.first.id}",
-          headers: { 'Turaco-Api-Key' => app_token.token }
+          headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let!(:result) { JSON.parse(response.body) }
@@ -79,7 +79,7 @@ describe 'Experiment CRUD', type: :request do
     context 'with no filters' do
       before do 
         get '/v3/experiment',
-          headers: { 'Turaco-Api-Key' => app_token.token }
+          headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       let(:results) { JSON.parse(response.body) }
@@ -96,7 +96,7 @@ describe 'Experiment CRUD', type: :request do
         experiments.last.save
 
         get '/v3/experiment', params: { name: 'foobar' }, headers: { 
-          'Turaco-Api-Key' => app_token.token 
+          'Authorization' => "Bearer #{token.token}" 
         }
       end
 

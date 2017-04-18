@@ -11,13 +11,13 @@ module CanStrap
         can :write, Experiment, user_id: user.id
         can :read, Experiment, user_id: user.id
 
-        # Samples
-        can :write, Sample, Sample.where(
-          'private = false OR user_id = ?', user.id
-        )
-        can :read, Sample, Sample.where(
-          'private = false OR user_id = ?', user.id
-        )
+        # This is gross and I hate it
+        # https://github.com/ryanb/cancan/issues/957#issuecomment-32626510
+        can :write, Sample, private: false
+        can :write, Sample, user_id: user.id
+
+        can :read, Sample, private: false
+        can :read, Sample, user_id: user.id
 
         # Score (tbd)
         can :read, Score
