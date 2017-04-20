@@ -74,6 +74,10 @@ describe 'Experiment CRUD', type: :request do
       it 'should retrieve an existing experiment' do
         expect(response.code).to eql('200')
       end
+
+      it 'should get the properties of the experiment' do
+        expect(result['name']).to eql (experiments.first.name)
+      end
     end
 
     context 'with no filters' do
