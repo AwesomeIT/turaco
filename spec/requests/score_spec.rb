@@ -6,9 +6,9 @@ describe 'Score CRUD', type: :request do
   let(:sample) { FactoryGirl.create(:sample) }
   let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
 
-  context 'PUT /score' do 
+  context 'PUT /scores' do 
     before do
-      put '/v3/score',
+      put '/v3/scores',
       params: { 
         user_id: user.id,
         experiment_id: experiment.id,
@@ -38,7 +38,7 @@ describe 'Score CRUD', type: :request do
 
     context 'with invalid/missing parameters' do 
       before do
-        put '/v3/score', 
+        put '/v3/scores', 
         params: {
           user_id: user.id,
           experiment_id: experiment.id,

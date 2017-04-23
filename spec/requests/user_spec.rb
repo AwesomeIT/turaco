@@ -9,11 +9,11 @@ describe 'User CRUD', type: :request do
 
   let(:result) { JSON.parse(response.body) }
 
-  context 'PUT /user' do
+  context 'PUT /users' do
     let(:email) { 'test@foo.com' }
 
     before do
-      put '/v3/user',
+      put '/v3/users',
         params: {
           email: email,
           encrypted_password: 'foobar'
@@ -29,9 +29,9 @@ describe 'User CRUD', type: :request do
     end
   end
 
-  context 'GET /user/self' do 
+  context 'GET /users/self' do 
     before do
-      get '/v3/user/self',
+      get '/v3/users/self',
         headers: {
           Authorization: "Bearer #{token.token}"
         }
@@ -43,9 +43,9 @@ describe 'User CRUD', type: :request do
     end
   end
 
-  context 'GET /user' do    
+  context 'GET /users' do    
     before do
-      get '/v3/user',
+      get '/v3/users',
         headers: {
           Authorization: "Bearer #{token.token}"
         }
@@ -60,7 +60,7 @@ describe 'User CRUD', type: :request do
       let(:some_user) { FactoryGirl.create(:participant_user) }
 
       before do
-        get "/v3/user/#{some_user.id}",
+        get "/v3/users/#{some_user.id}",
           headers: {
             Authorization: "Bearer #{token.token}"
           }
@@ -73,11 +73,11 @@ describe 'User CRUD', type: :request do
     end
   end
 
-  context 'POST /user' do
+  context 'POST /users' do
     let(:new_email) { 'new@email.com'}
 
     before do
-      post "/v3/user/#{token.resource_owner_id}",
+      post "/v3/users/#{token.resource_owner_id}",
         params: {
           email: new_email
         },

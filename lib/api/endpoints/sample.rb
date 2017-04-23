@@ -72,14 +72,14 @@ module API
         optional :private, type: Boolean, desc: 'flag for sample sharing'
       end
       put '/:id', authorize: [:write, ::Sample] do
-        status 204
-
-        present(
-          ::Sample.find(params[:id]).update(
-            name: params[:name],
-            private: params[:private]
-          )
-        )
+        status 200
+        declared_params = declared(params, include_missing: false)
+        sample =
+          ::Sample.accessible_by(current_ability)
+                  .find(declared_params[:id])
+        sample.update_attributes(declared_params.to_h)
+        sample.save
+        present(sample, with: Entities::Sample)
       end
     end
   end

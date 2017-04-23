@@ -7,10 +7,10 @@ describe 'Sample CRUD', type: :request do
 
   let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
   
-  context 'PUT /sample' do 
+  context 'PUT /samples' do 
     before do
       allow(Adapters::S3).to receive(:upload_file).and_return(true)
-      put '/v3/sample', 
+      put '/v3/samples', 
       params: {
         user_id: user.id,
         name: 'name',
@@ -30,13 +30,12 @@ describe 'Sample CRUD', type: :request do
         .with(
           'birdfeedtemp', instance_of(String),attachment.original_filename
         )
-
       expect(response.code).to eql('201')
     end
 
     context 'with invalid/missing parameters' do 
       before do
-        put '/v3/sample', params: { user_id: user.id }, headers: { 
+        put '/v3/samples', params: { user_id: user.id }, headers: { 
           'Authorization' => "Bearer #{token.token}" 
         }
       end
@@ -48,12 +47,12 @@ describe 'Sample CRUD', type: :request do
     end
   end
 
-  context 'GET /sample' do
+  context 'GET /samples' do
     let!(:samples) { FactoryGirl.create_list(:sample, 15) }
 
     context 'get single sample' do
       before do
-        get "/v3/sample/#{samples.first.id}", 
+        get "/v3/samples/#{samples.first.id}", 
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
@@ -66,7 +65,7 @@ describe 'Sample CRUD', type: :request do
 
     context 'get all samples' do
       before do
-        get '/v3/sample/',
+        get '/v3/samples/',
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
@@ -79,12 +78,12 @@ describe 'Sample CRUD', type: :request do
     end
   end
 
-  context 'DELETE /sample' do
+  context 'DELETE /samples' do
     let!(:sample) { FactoryGirl.create(:sample) }
 
     context 'delete a sample' do
       before do
-        delete "/v3/sample/#{sample.id}",
+        delete "/v3/samples/#{sample.id}",
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
@@ -97,12 +96,12 @@ describe 'Sample CRUD', type: :request do
     end
   end
 
-  context 'UPDATE /sample' do
-    let!(:sample) { FactoryGirl.create(:sample) }
+  context 'UPDATE /samples' do
+    let!(:sample) { FactoryGirl.create(:sample, user_id: token.resource_owner_id) }
 
     context 'update a sample' do
       before do
-        put "/v3/sample/#{sample.id}",
+        put "/v3/samples/#{sample.id}",
         params: {
           user_id: user.id,
           name: 'new_name'
@@ -113,7 +112,7 @@ describe 'Sample CRUD', type: :request do
       let(:result) { JSON.parse(response.body) }
 
       it 'should have updated the sample' do
-        expect(response.code).to eql('204')
+        expect(response.code).to eql('200')
         expect(::Sample.find(sample.id).name).to eql('new_name')
       end
     end

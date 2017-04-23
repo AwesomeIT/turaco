@@ -68,15 +68,14 @@ module API
         optional :repeats, type: Integer, desc: 'Times a sample can be played'
       end
       put '/:id', authorize: [:write, ::Experiment] do
-        status 204
-
-        present(
-          ::Experiment.find(params[:id]).update(
-            name: params[:name],
-            active: params[:active],
-            repeats: params[:repeats]
-          )
-        )
+        status 200
+        declared_params = declared(params, include_missing: false)
+        experiment =
+          ::Experiment.accessible_by(current_ability)
+                      .find(declared_params[:id])
+        experiment.update_attributes(declared_params.to_h)
+        experiment.save
+        present(experiment, with: Entities::Experiment)
       end
     end
   end

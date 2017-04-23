@@ -8,9 +8,9 @@ describe 'Application CRUD', type: :request do
 
   let(:result) { JSON.parse(response.body) }
 
-  context 'PUT /application' do
+  context 'PUT /applications' do
     before do
-      put '/v3/application',
+      put '/v3/applications',
         params: {
           name: 'test application', 
           redirect_uri: 'https://test.net/catch'
@@ -26,7 +26,7 @@ describe 'Application CRUD', type: :request do
     end
   end
 
-  context 'POST /application/:id' do 
+  context 'POST /applications/:id' do 
     let(:owner) { FactoryGirl.create(:researcher_user) }
     let(:application) { FactoryGirl.create(:application, user: owner) }
     let(:token) do
@@ -36,7 +36,7 @@ describe 'Application CRUD', type: :request do
     let(:new_name) { 'foobarbazbar' }
 
     before do
-      post "/v3/application/#{application.id}",
+      post "/v3/applications/#{application.id}",
         params: { name: new_name },
         headers: {
           Authorization: "Bearer #{token.token}"
@@ -50,7 +50,7 @@ describe 'Application CRUD', type: :request do
     end
   end
 
-  context 'GET /application/:id' do
+  context 'GET /applications/:id' do
     let(:owner) { FactoryGirl.create(:researcher_user) }
     let(:application) { FactoryGirl.create(:application, user: owner) }
     let(:token) do
@@ -58,7 +58,7 @@ describe 'Application CRUD', type: :request do
     end
 
     before do
-      get "/v3/application/#{application.id}",
+      get "/v3/applications/#{application.id}",
         headers: {
           Authorization: "Bearer #{token.token}"
         }
@@ -83,7 +83,7 @@ describe 'Application CRUD', type: :request do
     end
   end
 
-  context 'GET /application' do
+  context 'GET /applications' do
     let(:owner_user) { FactoryGirl.create(:researcher_user) }
     let!(:applications) do 
       FactoryGirl.create_list(
@@ -102,7 +102,7 @@ describe 'Application CRUD', type: :request do
     let(:token) { oauth_token }
 
     before do
-      get '/v3/application',
+      get '/v3/applications',
         headers: {
           Authorization: "Bearer #{token.token}"
         }
