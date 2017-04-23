@@ -66,7 +66,7 @@ module API
         optional :active, type: Boolean, desc: 'Flag for experiment being used'
         optional :repeats, type: Integer, desc: 'Times a sample can be played'
       end
-      put '/:id', authorize: [:write, ::Experiment] do
+      post '/:id', authorize: [:write, ::Experiment] do
         status 200
         declared_params = declared(params, include_missing: false)
         experiment =
