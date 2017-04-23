@@ -117,3 +117,6 @@ gem 'rack-cors', '0.4.1', require: 'rack/cors'
 
 # Sexier queries
 gem 'baby_squeel', '1.1.4', require: 'baby_squeel'
+
+# Kafka client
+gem 'waterdrop', '0.3.2.3'
