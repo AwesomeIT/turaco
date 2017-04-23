@@ -8,7 +8,6 @@ module API
       desc 'Record a sample'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :user_id, type: Integer, desc: 'ID of user'
         requires :name, type: String, desc: 'name of sample'
         requires :private, type: Boolean, desc: 'flag for sample sharing'
         requires :file, type: File, desc: 'audio sample, to be uploaded to s3'
@@ -26,7 +25,9 @@ module API
 
         present(
           ::Sample.create(
-            declared(params).except(:file).merge(s3_url: s3_url) .to_h
+            declared(params).except(:file)
+                            .merge(s3_url: s3_url, user_id: current_user.id)
+                            .to_h
           ), with: Entities::Sample
         )
       end

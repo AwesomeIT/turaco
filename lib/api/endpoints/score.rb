@@ -8,7 +8,6 @@ module API
       desc 'Record a score'
       route_setting :scopes, %w(participant)
       params do
-        requires :user_id, type: Integer, desc: 'ID of user'
         requires :experiment_id, type: Integer, desc: 'ID of experiment'
         requires :sample_id, type: Integer, desc: 'ID of sample'
         requires :rating, type: Float, desc: 'rating assigned to sample'
@@ -17,7 +16,7 @@ module API
         status 201
         present(
           ::Score.create(
-            declared(params).to_h
+            declared(params).merge(user_id: current_user.id).to_h
           ), with: Entities::Score
         )
       end

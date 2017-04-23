@@ -12,7 +12,6 @@ describe 'Sample CRUD', type: :request do
       allow(Adapters::S3).to receive(:upload_file).and_return(true)
       put '/v3/samples', 
       params: {
-        user_id: user.id,
         name: 'name',
         private: false,
         file: attachment,
