@@ -8,6 +8,8 @@ module API
       property :high_label
       property :private
       property :hypothesis
+
+      #TODO: Add tags property
     end
   end
 end
