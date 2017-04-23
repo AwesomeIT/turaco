@@ -100,7 +100,7 @@ describe 'Sample CRUD', type: :request do
 
     context 'update a sample' do
       before do
-        put "/v3/samples/#{sample.id}",
+        post "/v3/samples/#{sample.id}",
         params: {
           user_id: user.id,
           name: 'new_name'

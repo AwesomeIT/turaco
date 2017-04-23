@@ -72,7 +72,7 @@ module API
         optional :name, type: String, desc: 'name of sample'
         optional :private, type: Boolean, desc: 'flag for sample sharing'
       end
-      put '/:id', authorize: [:write, ::Sample] do
+      post '/:id', authorize: [:write, ::Sample] do
         status 200
         declared_params = declared(params, include_missing: false)
         sample =

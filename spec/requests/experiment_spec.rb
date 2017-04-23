@@ -43,7 +43,7 @@ describe 'Experiment CRUD', type: :request do
 
     context 'update an experiment' do
       before do
-        put "/v3/experiments/#{experiment.id}",
+        post "/v3/experiments/#{experiment.id}",
         params: {
           name: 'new_name'
         },
