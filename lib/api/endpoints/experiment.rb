@@ -65,6 +65,7 @@ module API
         requires :id, type: Integer, desc: 'ID of experiment to be updated'
         optional :name, type: String, desc: 'Name of the experiment'
         optional :active, type: Boolean, desc: 'Flag for experiment being used'
+        optional :repeats, type: Integer, desc: 'Times a sample can be played'
       end
       put '/:id', authorize: [:write, ::Experiment] do
         status 204
@@ -72,7 +73,8 @@ module API
         present(
           ::Experiment.find(params[:id]).update(
             name: params[:name],
-            active: params[:active]
+            active: params[:active],
+            repeats: params[:repeats]
           )
         )
       end
