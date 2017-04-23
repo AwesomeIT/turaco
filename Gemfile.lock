@@ -1,13 +1,14 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: b3225850fb59c10721ab37db1081136f549210ff
+  revision: e5b226fd3f8a1708e863611757af73691be7f36c
   specs:
-    kagu (0.0.19)
+    kagu (0.0.21)
       activerecord
       activesupport
       devise
+      elasticsearch-model
       pg
-      rake (~> 10.0)
+      rake
 
 GEM
   remote: https://rubygems.org/
@@ -105,6 +106,18 @@ GEM
     dotenv-rails (2.2.0)
       dotenv (= 2.2.0)
       railties (>= 3.2, < 5.1)
+    elasticsearch (5.0.4)
+      elasticsearch-api (= 5.0.4)
+      elasticsearch-transport (= 5.0.4)
+    elasticsearch-api (5.0.4)
+      multi_json
+    elasticsearch-model (5.0.0)
+      activesupport (> 3)
+      elasticsearch (> 1)
+      hashie
+    elasticsearch-transport (5.0.4)
+      faraday
+      multi_json
     equalizer (0.0.11)
     erubis (2.7.0)
     execjs (2.7.0)
@@ -115,6 +128,8 @@ GEM
       railties (>= 3.0.0)
     faker (1.7.3)
       i18n (~> 0.5)
+    faraday (0.12.1)
+      multipart-post (>= 1.2, < 3)
     ffi (1.9.17)
     formatador (0.2.5)
     gemrat (0.4.6)
@@ -182,6 +197,7 @@ GEM
     minitest (5.10.1)
     multi_json (1.12.1)
     multi_xml (0.6.0)
+    multipart-post (2.0.0)
     mustermann (0.4.0)
       tool (~> 0.2)
     mustermann-grape (0.4.0)
@@ -237,7 +253,7 @@ GEM
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
     rainbow (2.2.1)
-    rake (10.5.0)
+    rake (12.0.0)
     rb-fsevent (0.9.8)
     rb-inotify (0.9.8)
       ffi (>= 0.5.0)

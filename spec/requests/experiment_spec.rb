@@ -5,9 +5,9 @@ describe 'Experiment CRUD', type: :request do
   let!(:user) { FactoryGirl.create(:researcher_user) }
   let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
 
-  context 'PUT /experiment' do 
+  context 'PUT /experiments' do 
     before do
-      put '/v3/experiment',
+      put '/v3/experiments',
       params: { 
         name: 'name',
         user_id: user.id
@@ -21,12 +21,12 @@ describe 'Experiment CRUD', type: :request do
     end
   end
 
-  context 'DELETE /experiment' do
+  context 'DELETE /experiments' do
     let!(:experiment) { FactoryGirl.create(:experiment) }
 
     context 'delete an experiment' do
       before do
-        delete "/v3/experiment/#{experiment.id}",
+        delete "/v3/experiments/#{experiment.id}",
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
@@ -39,12 +39,12 @@ describe 'Experiment CRUD', type: :request do
     end
   end
 
-  context 'UPDATE /experiment' do
+  context 'UPDATE /experiments' do
     let! (:experiment) { FactoryGirl.create(:experiment) }
 
     context 'update an experiment' do
       before do
-        put "/v3/experiment/#{experiment.id}",
+        put "/v3/experiments/#{experiment.id}",
         params: {
           name: 'new_name'
         },
@@ -60,12 +60,12 @@ describe 'Experiment CRUD', type: :request do
     end
   end
 
-  context 'GET /experiment' do 
+  context 'GET /experiments' do 
     let!(:experiments) { FactoryGirl.create_list(:experiment, 25) }
 
     context 'get single experiment' do
       before do
-        get "/v3/experiment/#{experiments.first.id}",
+        get "/v3/experiments/#{experiments.first.id}",
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
@@ -82,7 +82,7 @@ describe 'Experiment CRUD', type: :request do
 
     context 'with no filters' do
       before do 
-        get '/v3/experiment',
+        get '/v3/experiments',
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
@@ -99,7 +99,7 @@ describe 'Experiment CRUD', type: :request do
         experiments.last.name = 'foobar'
         experiments.last.save
 
-        get '/v3/experiment', params: { name: 'foobar' }, headers: { 
+        get '/v3/experiments', params: { name: 'foobar' }, headers: { 
           'Authorization' => "Bearer #{token.token}" 
         }
       end

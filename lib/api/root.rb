@@ -23,10 +23,10 @@ module API
       doorkeeper_authorize! unless Rails.env.test?
     end
 
-    mount Endpoints::Application => '/application'
-    mount Endpoints::Experiment => '/experiment'
-    mount Endpoints::Sample => '/sample'
-    mount Endpoints::Score => '/score'
-    mount Endpoints::User => '/user'
+    mount Endpoints::Application => '/applications'
+    mount Endpoints::Experiment => '/experiments'
+    mount Endpoints::Sample => '/samples'
+    mount Endpoints::Score => '/scores'
+    mount Endpoints::User => '/users'
   end
 end
