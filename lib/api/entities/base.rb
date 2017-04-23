@@ -18,6 +18,7 @@ module API
 
         private
 
+        # TODO: L29 is awful
         def generate_eval(name, meta)
           case meta
           when ActiveRecord::Reflection::BelongsToReflection
@@ -25,6 +26,7 @@ module API
               "decorator: API::Entities::#{name.camelize}"
           when ActiveRecord::Reflection::HasManyReflection,
               ActiveRecord::Reflection::HasAndBelongsToManyReflection
+            return nil if name == 'tags'
             "collection :#{meta.plural_name}, "\
               'decorator: API::Entities::Collection'
           else ''
