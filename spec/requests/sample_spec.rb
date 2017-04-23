@@ -30,7 +30,6 @@ describe 'Sample CRUD', type: :request do
         .with(
           'birdfeedtemp', instance_of(String),attachment.original_filename
         )
-      binding.pry
       expect(response.code).to eql('201')
     end
 
