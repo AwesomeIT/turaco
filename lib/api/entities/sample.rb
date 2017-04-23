@@ -9,7 +9,7 @@ module API
       property :private
       property :hypothesis
 
-      #TODO: Add tags property
+      # TODO: Add tags property
     end
   end
 end
