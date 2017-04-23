@@ -10,7 +10,6 @@ describe 'Score CRUD', type: :request do
     before do
       put '/v3/scores',
       params: { 
-        user_id: user.id,
         experiment_id: experiment.id,
         sample_id: sample.id,
         rating: 0.5
@@ -40,7 +39,6 @@ describe 'Score CRUD', type: :request do
       before do
         put '/v3/scores', 
         params: {
-          user_id: user.id,
           experiment_id: experiment.id,
           sample_id: sample.id
         },

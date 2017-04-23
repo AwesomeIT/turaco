@@ -9,8 +9,7 @@ describe 'Experiment CRUD', type: :request do
     before do
       put '/v3/experiments',
       params: { 
-        name: 'name',
-        user_id: user.id
+        name: 'name'
       },
       headers: { 'Authorization' => "Bearer #{token.token}" }
     end

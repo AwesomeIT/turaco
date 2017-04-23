@@ -9,14 +9,13 @@ module API
       route_setting :scopes, %w(administrator researcher)
       params do
         requires :name, type: String, desc: 'Name of experiment'
-        requires :user_id, type: Integer, desc: 'ID of user creating experiment'
       end
       put authorize: [:write, ::Experiment] do
         status 201
 
         present(
           ::Experiment.create(
-            declared(params).to_h
+            declared(params).merge(user_id: current_user.id).to_h
           ), with: Entities::Experiment
         )
       end
