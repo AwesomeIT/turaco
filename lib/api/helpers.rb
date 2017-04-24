@@ -4,5 +4,6 @@ module API
     extend ActiveSupport::Autoload
 
     autoload :Doorkeeper
+    autoload :Params
   end
 end

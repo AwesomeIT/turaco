@@ -6,6 +6,7 @@ module API
   class Root < Grape::API
     helpers Doorkeeper::Grape::Helpers
     helpers ::API::Helpers::Doorkeeper
+    helpers ::API::Helpers::Params
 
     format :json
     formatter :json, Grape::Formatter::Roar

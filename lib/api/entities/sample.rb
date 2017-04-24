@@ -9,7 +9,7 @@ module API
       property :private
       property :hypothesis
 
-      # TODO: Add tags property
+      collection :tags, decorator: API::Entities::Tag
     end
   end
 end

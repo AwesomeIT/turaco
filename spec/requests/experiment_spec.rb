@@ -5,6 +5,8 @@ describe 'Experiment CRUD', type: :request do
   let!(:user) { FactoryGirl.create(:researcher_user) }
   let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
 
+  let(:results) { JSON.parse(response.body) }
+
   context 'PUT /experiments' do 
     before do
       put '/v3/experiments',
@@ -60,7 +62,9 @@ describe 'Experiment CRUD', type: :request do
   end
 
   context 'GET /experiments' do 
-    let!(:experiments) { FactoryGirl.create_list(:experiment, 25) }
+    let!(:experiments) do
+      FactoryGirl.create_list(:experiment, 25, user_id: token.resource_owner_id)
+    end
 
     context 'get single experiment' do
       before do
@@ -85,11 +89,38 @@ describe 'Experiment CRUD', type: :request do
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
-      let(:results) { JSON.parse(response.body) }
-
       it 'should return all the experiments' do
         expect(results['experiments'].count).to eql(25)
         expect(response.code).to eql('200')
+      end
+    end
+
+    context 'with tags / elasticsearch' do
+      # Don't require ES in test, just ensure it happens
+      before do
+        allow(::Experiment).to receive(:by_tags)
+          .with(tags)
+          .and_return(OpenStruct.new(
+            records: ::Experiment.joins(:tags).where(
+              tags: { name: tags.split }
+            ) 
+          ))
+
+        experiments.last(5).each do |e|
+          e.tags << 'foo'
+        end
+
+        get '/v3/experiments',
+          params: { tags: tags }, headers: { 
+            'Authorization' => "Bearer #{token.token}" 
+          }
+      end
+
+      let(:tags) { 'foo bar' }
+
+      it 'finds all the tagged records' do
+        expect(response.code).to eql('200')
+        expect(results['experiments'].count).to eql(5)
       end
     end
 
@@ -102,8 +133,6 @@ describe 'Experiment CRUD', type: :request do
           'Authorization' => "Bearer #{token.token}" 
         }
       end
-
-      let(:results) { JSON.parse(response.body) }
 
       it 'should return the correct experiments' do 
         expect(response.code).to eql('200')

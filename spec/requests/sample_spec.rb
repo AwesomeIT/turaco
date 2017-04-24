@@ -6,6 +6,8 @@ describe 'Sample CRUD', type: :request do
     "./spec/support/sample.wav", "audio/wav") }
 
   let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
+
+  let(:result) { JSON.parse(response.body) }
   
   context 'PUT /samples' do 
     before do
@@ -20,8 +22,6 @@ describe 'Sample CRUD', type: :request do
       }, 
       headers: { 'Authorization' => "Bearer #{token.token}" }
     end
-
-    let(:result) { JSON.parse(response.body) }
 
     it 'should create a sample' do 
       expect(Adapters::S3)
@@ -47,7 +47,9 @@ describe 'Sample CRUD', type: :request do
   end
 
   context 'GET /samples' do
-    let!(:samples) { FactoryGirl.create_list(:sample, 15) }
+    let!(:samples) do
+      FactoryGirl.create_list(:sample, 15, user_id: token.resource_owner_id)
+    end
 
     context 'get single sample' do
       before do
@@ -62,13 +64,40 @@ describe 'Sample CRUD', type: :request do
       end
     end
 
+    context 'tags / with elasticsearch' do
+      # Don't require ES in test, just ensure it happens
+      before do
+        allow(::Sample).to receive(:by_tags)
+          .with(tags)
+          .and_return(OpenStruct.new(
+            records: ::Sample.joins(:tags).where(
+              tags: { name: tags.split }
+            ) 
+          ))
+
+        samples.last(5).each do |s|
+          s.tags << 'foo'
+        end
+
+        get '/v3/samples',
+          params: { tags: tags }, headers: { 
+            'Authorization' => "Bearer #{token.token}" 
+          }
+      end
+
+      let(:tags) { 'foo bar' }
+
+      it 'finds all the tagged records' do
+        expect(response.code).to eql('200')
+        expect(result['samples'].count).to eql(5)
+      end
+    end
+
     context 'get all samples' do
       before do
         get '/v3/samples/',
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
-
-      let(:result) { JSON.parse(response.body) }
 
       it 'should get all samples' do
         expect(result["samples"].count).to eql(15)
@@ -85,8 +114,6 @@ describe 'Sample CRUD', type: :request do
         delete "/v3/samples/#{sample.id}",
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
-
-      let(:result) { JSON.parse(response.body) }
 
       it 'should have deleted the sample' do
         expect(response.code).to eql('204')
@@ -107,8 +134,6 @@ describe 'Sample CRUD', type: :request do
         },
         headers: { 'Authorization' => "Bearer #{token.token}" }
       end
-
-      let(:result) { JSON.parse(response.body) }
 
       it 'should have updated the sample' do
         expect(response.code).to eql('200')
