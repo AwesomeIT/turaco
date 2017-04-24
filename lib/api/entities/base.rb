@@ -21,13 +21,16 @@ module API
         # TODO: L29 is awful
         # rubocop:disable Metrics/MethodLength
         def generate_eval(name, meta)
+          return unless API::Entities.constants.include?(
+            name.singularize.camelize.to_sym
+          )
+
           case meta
           when ActiveRecord::Reflection::BelongsToReflection
             "property :#{name.singularize}, "\
               "decorator: API::Entities::#{name.camelize}"
           when ActiveRecord::Reflection::HasManyReflection,
               ActiveRecord::Reflection::HasAndBelongsToManyReflection
-            return nil if name == 'tags'
             "collection :#{meta.plural_name}, "\
               'decorator: API::Entities::Collection'
           else ''

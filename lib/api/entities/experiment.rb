@@ -6,6 +6,8 @@ module API
       property :name
       property :repeats
       property :active
+
+      collection :tags, decorator: API::Entities::Tag
     end
   end
 end
