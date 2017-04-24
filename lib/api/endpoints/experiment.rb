@@ -44,15 +44,15 @@ module API
         status 200
 
         predicate = if declared_params.key?(:tags)
-          ::Experiment.by_tags(declared_params[:tags])
-            .records
-        else
-          ::Experiment
-        end
+                      ::Experiment.by_tags(declared_params[:tags])
+                                  .records
+                    else
+                      ::Experiment
+                    end
 
         experiments = predicate
-          .where(declared_params.except(:tags).to_h)
-          .accessible_by(current_ability)
+                      .where(declared_params.except(:tags).to_h)
+                      .accessible_by(current_ability)
 
         present(experiments, with: Entities::Collection)
       end

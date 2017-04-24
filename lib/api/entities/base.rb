@@ -19,7 +19,7 @@ module API
         private
 
         # TODO: L29 is awful
-        # rubocop:disable Method/MethodLength
+        # rubocop:disable Metrics/MethodLength
         def generate_eval(name, meta)
           case meta
           when ActiveRecord::Reflection::BelongsToReflection
@@ -33,7 +33,7 @@ module API
           else ''
           end
         end
-        # rubocop:enable Method/MethodLength
+        # rubocop:enable Metrics/MethodLength
       end
 
       link :self do |opts|

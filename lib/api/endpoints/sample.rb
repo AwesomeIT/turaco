@@ -46,11 +46,26 @@ module API
       end
 
       desc 'Retrieve a list of samples'
+      params do
+        optional :tags, type: String, desc: 'Whitespace delimited string of '\
+          'tags.'
+      end
       get authorize: [:read, ::Sample] do
         status 200
 
+        predicate = if declared_params.key?(:tags)
+                      ::Sample.by_tags(declared_params[:tags])
+                              .records
+                    else
+                      ::Sample
+                    end
+
+        samples = predicate
+                  .where(declared_params.except(:tags).to_h)
+                  .accessible_by(current_ability)
+
         present(
-          ::Sample.all, with: Entities::Collection
+          samples, with: Entities::Collection
         )
       end
 
