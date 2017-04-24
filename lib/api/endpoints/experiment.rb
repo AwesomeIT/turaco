@@ -37,14 +37,24 @@ module API
       params do
         optional :name, type: String, desc: 'Name of the experiment'
         optional :active, type: Boolean, desc: 'Active flag for experiments'
+        optional :tags, type: String, desc: 'Whitespace delimited string of '\
+          'tags.'
       end
       get authorize: [:read, ::Experiment] do
         status 200
 
-        present(
-          ::Experiment.where(declared(params).compact),
-          with: Entities::Collection
-        )
+        predicate = if declared_params.key?(:tags)
+          ::Experiment.by_tags(declared_params[:tags])
+            .records
+        else
+          ::Experiment
+        end
+
+        experiments = predicate
+          .where(declared_params.except(:tags).to_h)
+          .accessible_by(current_ability)
+
+        present(experiments, with: Entities::Collection)
       end
 
       desc 'Delete an experiment'
