@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module API
   module Endpoints
+    # rubocop:disable Metrics/ClassLength
     class Sample < Grape::API
       resource :samples
       authorize_routes!
@@ -8,11 +9,27 @@ module API
       desc 'Record a sample'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :name, type: String, desc: 'name of sample'
-        requires :private, type: Boolean, desc: 'flag for sample sharing'
-        requires :file, type: File, desc: 'audio sample, to be uploaded to s3'
-        requires :low_label, type: String, desc: 'left of rating scale'
-        requires :high_label, type: String, desc: 'right of rating scale'
+        requires :name, type: String, desc: 'name of sample',
+                        documentation: {
+                          param_type: 'body'
+                        }
+        requires :private, type: Boolean, desc: 'flag for sample sharing',
+                           documentation: {
+                             param_type: 'body'
+                           }
+        requires :file, type: File,
+                        desc: 'audio sample, to be uploaded to s3',
+                        documentation: {
+                          dataType: 'body'
+                        }
+        requires :low_label, type: String, desc: 'Label for low bound',
+                             documentation: {
+                               param_type: 'body'
+                             }
+        requires :high_label, type: String, desc: 'Label for upper bound',
+                              documentation: {
+                                param_type: 'body'
+                              }
       end
       put authorize: [:write, ::Sample] do
         status 201
@@ -83,9 +100,18 @@ module API
       desc 'Update a sample'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :id, type: Integer, desc: 'ID of sample to be updated'
-        optional :name, type: String, desc: 'name of sample'
-        optional :private, type: Boolean, desc: 'flag for sample sharing'
+        requires :id, type: Integer, desc: 'ID of sample to be updated',
+                      documentation: {
+                        param_type: 'body'
+                      }
+        optional :name, type: String, desc: 'Name of sample',
+                        documentation: {
+                          param_type: 'body'
+                        }
+        optional :private, type: Boolean, desc: 'Flag for sample sharing',
+                           documentation: {
+                             param_type: 'body'
+                           }
       end
       post '/:id', authorize: [:write, ::Sample] do
         status 200
@@ -98,5 +124,6 @@ module API
         present(sample, with: Entities::Sample)
       end
     end
+    # rubocop:enable Metrics/ClassLength
   end
 end

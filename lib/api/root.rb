@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 require 'doorkeeper/grape/helpers'
+require 'grape-swagger'
 require 'warden'
 
 module API
@@ -8,7 +9,10 @@ module API
     helpers ::API::Helpers::Doorkeeper
     helpers ::API::Helpers::Params
 
-    format :json
+    content_type :json, 'application/json'
+    content_type :multipart, 'multipart/form-data'
+
+    default_format :json
     formatter :json, Grape::Formatter::Roar
 
     # TODO: Break out into its own module and handle
@@ -21,7 +25,8 @@ module API
     end
 
     before do
-      doorkeeper_authorize! unless Rails.env.test?
+      doorkeeper_authorize! unless Rails.env.test? ||
+                                   request.path == '/v3/swagger.json'
     end
 
     mount Endpoints::Application => '/applications'
@@ -29,5 +34,7 @@ module API
     mount Endpoints::Sample => '/samples'
     mount Endpoints::Score => '/scores'
     mount Endpoints::User => '/users'
+
+    add_swagger_documentation(mount_path: '/swagger.json')
   end
 end

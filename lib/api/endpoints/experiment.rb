@@ -8,7 +8,10 @@ module API
       desc 'Record an experiment'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :name, type: String, desc: 'Name of experiment'
+        requires :name, type: String, desc: 'Name of experiment',
+                        documentation: {
+                          param_type: 'body'
+                        }
       end
       put authorize: [:write, ::Experiment] do
         status 201
@@ -71,10 +74,22 @@ module API
       desc 'Update an experiment'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :id, type: Integer, desc: 'ID of experiment to be updated'
-        optional :name, type: String, desc: 'Name of the experiment'
-        optional :active, type: Boolean, desc: 'Flag for experiment being used'
-        optional :repeats, type: Integer, desc: 'Times a sample can be played'
+        requires :id, type: Integer, desc: 'ID of experiment to be updated',
+                      documentation: {
+                        param_type: 'body'
+                      }
+        optional :name, type: String, desc: 'Name of the experiment',
+                        documentation: {
+                          param_type: 'body'
+                        }
+        optional :active, type: Boolean, desc: 'Flag for experiment being used',
+                          documentation: {
+                            param_type: 'body'
+                          }
+        optional :repeats, type: Integer, desc: 'Times a sample can be played',
+                           documentation: {
+                             param_type: 'body'
+                           }
       end
       post '/:id', authorize: [:write, ::Experiment] do
         status 200
