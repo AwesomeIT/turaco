@@ -7,7 +7,7 @@ The TalkBirdy speech analytics platform, powered by [grape, grape-roar](https://
 
 ### Requirements
 
-These packages can be found on `apt`, `brew`, `dnf`, and the Arch AUR available. If you use Windows, we highly recommend Ubuntu on Windows ([WSL](https://msdn.microsoft.com/en-us/commandline/wsl/about)).Hooray!
+These packages can be found on `apt`, `brew`, `dnf`, and the Arch AUR available. If you use Windows, we highly recommend Ubuntu on Windows ([WSL](https://msdn.microsoft.com/en-us/commandline/wsl/about)). Hooray!
 
 - MRI `2.4.0` or greater
   - Rubinius also seems to work but you will hate everything getting `pg` to build properly. Not officially supported.
@@ -22,35 +22,53 @@ These packages can be found on `apt`, `brew`, `dnf`, and the Arch AUR available.
 
 All database maintenance is performed from [our model gem](https://github.com/awesomeit/kagu). For more detailed documentation on database setup please look at the other README, and the one linked for `standalone_migrations`.
 
-- Ensure your database is started:
-  - `systemctl start postgresql`
-  - `brew services postgresql start`
+Ensure your database is started:
+```bash
+systemctl start postgresql
+brew services postgresql start
+```
 
-- `git clone git@github.com:AwesomeIT/kagu.git`
-- `cd kagu`
-- `bundle`
-- Edit `db/config.yml` with your local database's hostname, username, and password.
-- `bundle exec rake db:reset`
+Clone and prepare database:
+
+Edit `db/config.yml` with your local database's hostname, username, and password.
+
+```bash
+git clone git@github.com:AwesomeIT/kagu.git
+cd kagu
+bundle
+bundle exec rake db:reset
+```
 
 #### API
 
-- `git clone git@github.com:AwesomeIT/turaco.git`
-- `cd turaco`
-- `bundle`
-- Edit `config/database.yml` with your local database's hostname, username, and password.
-  - Yes, you can copy the one you previously made.
-- `bundle exec rake db:seed`
-  - This adds an administrator and populates the role table.
+Clone and install dependencies:
+
+Edit `config/database.yml` with your local database's hostname, username, and password (psst: use the one from earlier).
+
+```bash
+git clone git@github.com:AwesomeIT/turaco.git
+cd turaco
+bundle
+bundle exec rake db:seed
+```
 
 #### Running everything
 
-- Start `postgresql` (skip if you did this earlier)
-  - `systemctl start postgresql`
-  - `brew services postgresql start`
-- Start `elasticsearch` and bind it to `localhost:9200`. Generally, all you need to do for this is:
-  - `systemctl start elasticsearch`
-  - `brew services elasticsearch start`
-- `rails s`
+Start `postgresql` (skip if you did this earlier):
+```bash
+systemctl start postgresql
+brew services postgresql start
+```
+
+
+Start `elasticsearch` and bind it to `localhost:9200`. Generally, all you need to do for this is:
+
+```bash
+systemctl start elasticsearch
+brew services elasticsearch start
+```
+
+Finally: `rails s`
 
 ## API
 
