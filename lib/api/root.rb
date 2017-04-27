@@ -38,7 +38,7 @@ module API
     add_swagger_documentation(
       mount_path: '/swagger.json',
       info: {
-        title: "TalkBirdy"
+        title: 'TalkBirdy'
       }
     )
   end
