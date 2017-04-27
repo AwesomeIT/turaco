@@ -2,7 +2,7 @@
 Rails.application.routes.draw do
   mount API::Root => '/v3/'
 
-  # root 'doorkeeper/applications#index'
+  root 'swagger_engine/swaggers#show', id: 'v2'
 
   devise_for :users
   use_doorkeeper do

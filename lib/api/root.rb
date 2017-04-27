@@ -35,6 +35,11 @@ module API
     mount Endpoints::Score => '/scores'
     mount Endpoints::User => '/users'
 
-    add_swagger_documentation(mount_path: '/swagger.json')
+    add_swagger_documentation(
+      mount_path: '/swagger.json',
+      info: {
+        title: "TalkBirdy"
+      }
+    )
   end
 end
