@@ -6,3 +6,11 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+
+roles = %w(Administrator Researcher Participant).map do |r|
+  Role.create(name: r)
+end
+
+user = User.create(email: 'test@talkbirdy.com', password: 'abc123')
+user.roles << roles.first
+user.save
