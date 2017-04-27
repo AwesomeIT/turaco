@@ -6,7 +6,7 @@ module SwaggerEngine
     def show
       respond_to do |format|
         format.html do
-          @swagger_json_url = SwaggerEngine.configuration.json_files
+          @swagger_json_url = "#{request.base_url}/v3/swagger.json"
         end
       end
     end
