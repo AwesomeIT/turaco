@@ -1,5 +1,5 @@
 # Turaco
-[![Code Climate](https://codeclimate.com/github/awesomeit/turaco.png)](https://codeclimate.com/github/awesomeit/turaco) ![CircleCI](https://circleci.com/gh/awesomeit/turaco.svg?style=shield&circle-token=e69669e5ebd800aeeb50f55612d1a49e77120a57)
+[![Code Climate](https://codeclimate.com/github/AwesomeIT/turaco.png)](https://codeclimate.com/github/AwesomeIT/turaco) ![CircleCI](https://circleci.com/gh/AwesomeIT/turaco.svg?style=shield&circle-token=e69669e5ebd800aeeb50f55612d1a49e77120a57)
 
 The TalkBirdy speech analytics platform, powered by [grape, grape-roar](https://github.com/ruby-grape), [Elasticsearch](https://www.elastic.co/), and [Rails 5](https://github.com/rails/rails).
 
@@ -50,6 +50,20 @@ git clone git@github.com:AwesomeIT/turaco.git
 cd turaco
 bundle
 bundle exec rake db:seed
+```
+
+#### Search
+
+When a record is modified, the API sends a Kafka message to update the Elasticsearch record. In order to make things easier locally, we do not require that you run the [workers](https://github.com/awesomeit/myna) or `kafka` to make changes. Create some records by doing CRUD operations. You can run any of these operations while the API is running, as a separate process. If ES is down, the search endpoints (should) fall back on SQL. You will not be able to see changes without updating ElasticSearch when querying `/v3/:resources` with filters.
+
+To set up the ES indicies:
+```bash
+bundle exec elasticsearch:force_reindex
+```
+
+To update after making changes to the local SQL database:
+```bash
+bundle exec elasticsearch:update_all
 ```
 
 #### Running everything
