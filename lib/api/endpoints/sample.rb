@@ -18,7 +18,6 @@ module API
         status 201
 
         s3_url = Adapters::S3.upload_file(
-          'birdfeedtemp',
           params[:file]['tempfile'].path,
           params[:file]['filename']
         )

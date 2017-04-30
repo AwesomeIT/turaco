@@ -11,6 +11,7 @@ describe 'Sample CRUD', type: :request do
   context 'PUT /samples' do 
     before do
       allow(Adapters::S3).to receive(:upload_file).and_return(true)
+
       put '/v3/samples', 
       params: {
         name: 'name',
@@ -25,7 +26,7 @@ describe 'Sample CRUD', type: :request do
       expect(Adapters::S3)
         .to have_received(:upload_file)
         .with(
-          'birdfeedtemp', instance_of(String),attachment.original_filename
+          instance_of(String),attachment.original_filename
         )
       expect(response.code).to eql('201')
     end
