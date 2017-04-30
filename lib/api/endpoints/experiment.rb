@@ -8,10 +8,7 @@ module API
       desc 'Record an experiment'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :name, type: String, desc: 'Name of experiment',
-                        documentation: {
-                          param_type: 'body'
-                        }
+        requires :name, type: String, desc: 'Name of experiment'
       end
       put authorize: [:write, ::Experiment] do
         status 201
@@ -67,29 +64,17 @@ module API
       end
       delete '/:id', authorize: [:write, ::Experiment] do
         status 204
-
         ::Experiment.delete(declared(params)[:id])
       end
 
       desc 'Update an experiment'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :id, type: Integer, desc: 'ID of experiment to be updated',
-                      documentation: {
-                        param_type: 'body'
-                      }
-        optional :name, type: String, desc: 'Name of the experiment',
-                        documentation: {
-                          param_type: 'body'
-                        }
-        optional :active, type: Boolean, desc: 'Flag for experiment being used',
-                          documentation: {
-                            param_type: 'body'
-                          }
-        optional :repeats, type: Integer, desc: 'Times a sample can be played',
-                           documentation: {
-                             param_type: 'body'
-                           }
+        requires :id, type: Integer, desc: 'ID of experiment to be updated'
+        optional :name, type: String, desc: 'Name of the experiment'
+        optional :active, type: Boolean, desc: 'Flag for experiment being used'
+        optional :repeats, type: Integer, desc: 'Times a sample can be played'
+        optional :organization_id, type: Integer, desc: 'Organization ID'
       end
       post '/:id', authorize: [:write, ::Experiment] do
         status 200
@@ -97,8 +82,21 @@ module API
         experiment =
           ::Experiment.accessible_by(current_ability)
                       .find(declared_params[:id])
-        experiment.update_attributes(declared_params.to_h)
-        experiment.save
+
+        # Update regular attributes first
+        experiment.update_attributes(
+          declared_params.except(:organization_id).to_h
+        )
+
+        # Append organization if present
+        if declared_params.key?(:organization_id)
+          experiment.organization = ::Organization.find(
+            declared_params[:organization_id]
+          )
+
+          experiment.save
+        end
+
         present(experiment, with: Entities::Experiment)
       end
     end

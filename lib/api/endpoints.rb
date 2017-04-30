@@ -5,6 +5,7 @@ module API
 
     autoload :Authorize
     autoload :Experiment
+    autoload :Organization
     autoload :Sample
     autoload :Score
     autoload :User

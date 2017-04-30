@@ -7,6 +7,7 @@ module API
     autoload :Collection
     autoload :Doorkeeper
     autoload :Experiment
+    autoload :Organization
     autoload :Sample
     autoload :Score
     autoload :Tag

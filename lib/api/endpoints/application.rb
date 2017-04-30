@@ -8,16 +8,10 @@ module API
       desc 'Create an application'
       route_setting :scopes, %(administrator)
       params do
-        requires :name, type: String, desc: 'Application name',
-                        documentation: {
-                          param_type: 'body'
-                        }
+        requires :name, type: String, desc: 'Application name'
         requires :redirect_uri,
                  type: String,
-                 desc: 'OAuth redirect URI (must be HTTPS)',
-                 documentation: {
-                   param_type: 'body'
-                 }
+                 desc: 'OAuth redirect URI (must be HTTPS)'
       end
       put authorize: [:write, Doorkeeper::Application] do
         status 201
@@ -56,20 +50,11 @@ module API
       desc 'Update an application'
       route_setting :scopes, %(administrator researcher)
       params do
-        requires :id, type: Integer, desc: 'Application ID',
-                      documentation: {
-                        param_type: 'body'
-                      }
-        optional :name, type: String, desc: 'Application name',
-                        documentation: {
-                          param_type: 'body'
-                        }
+        requires :id, type: Integer, desc: 'Application ID'
+        optional :name, type: String, desc: 'Application name'
         optional :redirect_uri,
                  type: String,
-                 desc: 'OAuth redirect URI (must be HTTPS)',
-                 documentation: {
-                   param_type: 'body'
-                 }
+                 desc: 'OAuth redirect URI (must be HTTPS)'
       end
       post '/:id', authorize: [:write, Doorkeeper::Application] do
         status 204
