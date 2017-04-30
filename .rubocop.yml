@@ -20,3 +20,6 @@ Style/MultilineIfModifier:
 
 Style/RegexpLiteral:
   Enabled: false
+
+Metrics/ClassLength:
+  Max: 150
