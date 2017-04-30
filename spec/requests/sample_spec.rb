@@ -6,7 +6,6 @@ describe 'Sample CRUD', type: :request do
     "./spec/support/sample.wav", "audio/wav") }
 
   let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
-
   let(:result) { JSON.parse(response.body) }
   
   context 'PUT /samples' do 
@@ -15,7 +14,6 @@ describe 'Sample CRUD', type: :request do
       put '/v3/samples', 
       params: {
         name: 'name',
-        private: false,
         file: attachment,
         low_label: 'not R',
         high_label: 'R'
@@ -123,7 +121,7 @@ describe 'Sample CRUD', type: :request do
   end
 
   context 'UPDATE /samples' do
-    let!(:sample) { FactoryGirl.create(:sample, user_id: token.resource_owner_id) }
+    let(:sample) { FactoryGirl.create(:sample, user_id: token.resource_owner_id) }
 
     context 'update a sample' do
       before do
@@ -139,6 +137,26 @@ describe 'Sample CRUD', type: :request do
         expect(response.code).to eql('200')
         expect(::Sample.find(sample.id).name).to eql('new_name')
       end
+    end
+  end
+
+  context 'PUT /samples/:id/organizations/:organization_id' do
+    let(:sample) do
+      FactoryGirl.create(:sample, user_id: user.id)
+    end
+
+    let(:organization) do
+      FactoryGirl.create(:organization, users: [user])
+    end
+
+    before do
+      put "/v3/samples/#{sample.id}/organizations/#{organization.id}",
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    it 'should associate the two' do
+      expect(response.code).to eql('201')
+      expect(sample.organizations).to include(organization)
     end
   end
 end
