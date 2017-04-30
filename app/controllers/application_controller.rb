@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
 
   def after_login_action(_resource)
-    session[:previous_url] || root_path
+    session[:previous_url] || request.referrer || root_path
   end
 
   # rubocop:disable Style/Alias
