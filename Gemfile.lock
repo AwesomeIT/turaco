@@ -1,10 +1,11 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: f47350ba01ec0b0e2091d1878927441ba08561ec
+  revision: 406c8958e08b69b838371b46cbc40c05062f922e
   specs:
-    kagu (0.1.0)
+    kagu (0.2.0)
       activerecord
       activesupport
+      aws-sdk
       devise
       elasticsearch-model
       pg
