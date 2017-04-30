@@ -63,7 +63,7 @@ module API
         app = Doorkeeper::Application.accessible_by(current_ability)
                                      .find(declared_params[:id])
 
-        app.update_attributes(declared_params.except(:id).to_h)
+        app.update_attributes(declared_hash.except(:id))
         nil
       end
     end

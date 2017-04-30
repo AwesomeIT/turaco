@@ -7,7 +7,7 @@ module API
       end
 
       def declared_hash
-        @declared_hash ||= declared_params.to_h
+        @declared_hash ||= declared_params.to_h.with_indifferent_access
       end
     end
   end

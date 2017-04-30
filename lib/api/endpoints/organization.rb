@@ -14,7 +14,7 @@ module API
       put do
         status 201
 
-        new_org = ::Organization.create(declared_params.to_h)
+        new_org = ::Organization.create(declared_hash)
         new_org.users << current_user
         new_org.save
 
@@ -63,7 +63,7 @@ module API
 
         org = ::Organization.accessible_by(current_ability)
                             .find(declared_params[:id])
-        org.update_attributes(declared_params.to_h)
+        org.update_attributes(declared_hash)
         org.save
 
         present(org, with: Entities::Organization)

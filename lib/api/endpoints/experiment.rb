@@ -15,7 +15,7 @@ module API
 
         present(
           ::Experiment.create(
-            declared(params).merge(user_id: current_user.id).to_h
+            declared_hash.merge(user_id: current_user.id)
           ), with: Entities::Experiment
         )
       end
@@ -28,7 +28,7 @@ module API
         status 200
 
         present(
-          ::Experiment.find(declared(params)[:id]),
+          ::Experiment.find(declared_params[:id]),
           with: Entities::Experiment
         )
       end
@@ -57,7 +57,7 @@ module API
       end
       delete '/:id', authorize: [:write, ::Experiment] do
         status 204
-        ::Experiment.delete(declared(params)[:id])
+        ::Experiment.delete(declared_params[:id])
       end
 
       desc 'Update an experiment'
@@ -78,7 +78,7 @@ module API
 
         # Update regular attributes first
         experiment.update_attributes(
-          declared_params.except(:organization_id).to_h
+          declared_hash.except(:organization_id)
         )
 
         # Append organization if present

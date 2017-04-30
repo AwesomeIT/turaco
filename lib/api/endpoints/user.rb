@@ -67,9 +67,8 @@ module API
       end
       post '/:id', authorize: [:write, ::User] do
         status 200
-        declared_params = declared(params, include_missing: false)
         user = ::User.accessible_by(current_ability).find(declared_params[:id])
-        user.update_attributes(declared_params.to_h)
+        user.update_attributes(declared_hash)
         user.save
 
         present(user, with: Entities::User)

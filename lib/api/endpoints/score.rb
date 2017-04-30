@@ -16,7 +16,7 @@ module API
         status 201
         present(
           ::Score.create(
-            declared(params).merge(user_id: current_user.id).to_h
+            declared_hash.merge(user_id: current_user.id)
           ), with: Entities::Score
         )
       end

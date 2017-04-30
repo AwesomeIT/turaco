@@ -24,12 +24,9 @@ module API
         )
 
         present(
-          ::Sample.create(
-            declared(params).except(:file)
-                            .merge(s3_url: s3_url, user_id: current_user.id)
-                            .to_h
-          ), with: Entities::Sample
-        )
+          ::Sample.create(declared_hash.except(:file).merge(
+            s3_url: s3_url, user_id: current_user.id
+        )), with: Entities::Sample)
       end
 
       desc 'Retrieve a sample'
@@ -40,7 +37,7 @@ module API
         status 200
 
         present(
-          ::Sample.find(declared(params)[:id]),
+          ::Sample.find(declared_params[:id]),
           with: Entities::Sample
         )
       end
@@ -82,7 +79,7 @@ module API
         sample =
           ::Sample.accessible_by(current_ability)
                   .find(declared_params[:id])
-        sample.update_attributes(declared_params.to_h)
+        sample.update_attributes(declared_hash)
         sample.save
         present(sample, with: Entities::Sample)
       end
