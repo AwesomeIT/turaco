@@ -25,8 +25,9 @@ module API
 
         present(
           ::Sample.create(declared_hash.except(:file).merge(
-            s3_url: s3_url, user_id: current_user.id
-        )), with: Entities::Sample)
+                            s3_url: s3_url, user_id: current_user.id
+          )), with: Entities::Sample
+        )
       end
 
       desc 'Retrieve a sample'
