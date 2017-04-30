@@ -118,6 +118,28 @@ module API
 
         nil
       end
+
+      desc 'Disassociate a sample with an organization'
+      route_setting :scopes, %w(administrator researcher)
+      params do
+        requires :id, type: Integer, desc: 'Sample ID'
+        requires :organization_id, type: Integer, desc: 'Organization ID'
+      end
+      delete '/:id/organizations/:organization_id' do
+        status 204
+
+        authorize! :write, ::Sample
+        authorize! :write, ::Organization
+
+        sample = ::Sample.accessible_by(current_ability)
+                         .find(declared_params[:id])
+        organization = ::Organization.accessible_by(current_ability)
+                                     .find(declared_params[:organization_id])
+
+        sample.organizations.delete(organization)
+
+        nil
+      end
     end
     # rubocop:enable Metrics/ClassLength
   end

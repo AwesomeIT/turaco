@@ -159,4 +159,23 @@ describe 'Sample CRUD', type: :request do
       expect(sample.organizations).to include(organization)
     end
   end
+
+  context 'DELETE /samples/:id/organizations/:organization_id' do
+    let(:sample) do
+      FactoryGirl.create(:sample, user_id: user.id, organizations: [
+        FactoryGirl.create(:organization, users: [user])
+      ])
+    end
+
+    before do
+      delete "/v3/samples/#{sample.id}/organizations/#{sample.organizations.first.id}",
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    it 'should disassociate the two' do
+      expect(response.code).to eql('204')
+      sample.reload
+      expect(sample.organizations).to be_empty
+    end
+  end
 end
