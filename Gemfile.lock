@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: c3e91bb7891d0938091e3264004bd8b3ba5b2a2b
+  revision: f47350ba01ec0b0e2091d1878927441ba08561ec
   specs:
-    kagu (0.0.25)
+    kagu (0.1.0)
       activerecord
       activesupport
       devise
