@@ -99,19 +99,16 @@ describe 'Experiment CRUD', type: :request do
       end
     end
 
-    context 'with tags / elasticsearch' do
-      # Don't require ES in test, just ensure it happens
+    context 'tags / with elasticsearch' do
       before do
-        allow(::Experiment).to receive(:by_tags)
-          .with(tags)
-          .and_return(OpenStruct.new(
-            records: ::Experiment.joins(:tags).where(
+        allow_any_instance_of(Kagu::Query::Elastic).to receive(:search)
+          .with('tags' => tags)
+          .and_return(::Experiment.joins(:tags).where(
               tags: { name: tags.split }
-            ) 
           ))
 
-        experiments.last(5).each do |e|
-          e.tags << 'foo'
+        experiments.last(5).each do |s|
+          s.tags << 'foo'
         end
 
         get '/v3/experiments',
@@ -122,7 +119,7 @@ describe 'Experiment CRUD', type: :request do
 
       let(:tags) { 'foo bar' }
 
-      it 'finds all the tagged records' do
+      it 'calls the adapter' do
         expect(response.code).to eql('200')
         expect(results['experiments'].count).to eql(5)
       end

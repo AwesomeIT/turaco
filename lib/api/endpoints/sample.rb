@@ -53,20 +53,11 @@ module API
       get authorize: [:read, ::Sample] do
         status 200
 
-        predicate = if declared_params.key?(:tags)
-                      ::Sample.by_tags(declared_params[:tags])
-                              .records
-                    else
-                      ::Sample
-                    end
+        samples = Kagu::Query::Elastic.for(::Sample).search(
+          declared_hash.extract!('tags')
+        ).where(declared_hash).accessible_by(current_ability)
 
-        samples = predicate
-                  .where(declared_params.except(:tags).to_h)
-                  .accessible_by(current_ability)
-
-        present(
-          samples, with: Entities::Collection
-        )
+        present(samples, with: Entities::Collection)
       end
 
       desc 'Delete a sample'

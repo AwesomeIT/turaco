@@ -63,14 +63,11 @@ describe 'Sample CRUD', type: :request do
     end
 
     context 'tags / with elasticsearch' do
-      # Don't require ES in test, just ensure it happens
       before do
-        allow(::Sample).to receive(:by_tags)
-          .with(tags)
-          .and_return(OpenStruct.new(
-            records: ::Sample.joins(:tags).where(
+        allow_any_instance_of(Kagu::Query::Elastic).to receive(:search)
+          .with('tags' => tags)
+          .and_return(::Sample.joins(:tags).where(
               tags: { name: tags.split }
-            ) 
           ))
 
         samples.last(5).each do |s|
@@ -85,7 +82,7 @@ describe 'Sample CRUD', type: :request do
 
       let(:tags) { 'foo bar' }
 
-      it 'finds all the tagged records' do
+      it 'calls the adapter' do
         expect(response.code).to eql('200')
         expect(result['samples'].count).to eql(5)
       end

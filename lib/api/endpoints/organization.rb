@@ -31,16 +31,9 @@ module API
       get authorize: [:read, ::Organization] do
         status 200
 
-        predicate = if declared_params.key?(:tags)
-                      ::Organization.by_tags(declared_params[:tags])
-                                    .records
-                    else
-                      ::Organization
-                    end
-
-        organizations = predicate
-                        .where(declared_params.except(:tags).to_h)
-                        .accessible_by(current_ability)
+        organizations = Kagu::Query::Elastic.for(::Organization).search(
+          declared_hash.extract!('tags')
+        ).where(declared_hash).accessible_by(current_ability)
 
         present(organizations, with: Entities::Collection)
       end
