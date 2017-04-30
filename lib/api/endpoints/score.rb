@@ -8,24 +8,15 @@ module API
       desc 'Record a score'
       route_setting :scopes, %w(participant)
       params do
-        requires :experiment_id, type: Integer, desc: 'ID of experiment',
-                                 documentation: {
-                                   param_type: 'body'
-                                 }
-        requires :sample_id, type: Integer, desc: 'ID of sample',
-                             documentation: {
-                               param_type: 'body'
-                             }
-        requires :rating, type: Float, desc: 'rating assigned to sample',
-                          documentation: {
-                            param_type: 'body'
-                          }
+        requires :experiment_id, type: Integer, desc: 'ID of experiment'
+        requires :sample_id, type: Integer, desc: 'ID of sample'
+        requires :rating, type: Float, desc: 'rating assigned to sample'
       end
       put authorize: [:write, ::Score] do
         status 201
         present(
           ::Score.create(
-            declared(params).merge(user_id: current_user.id).to_h
+            declared_hash.merge(user_id: current_user.id)
           ), with: Entities::Score
         )
       end

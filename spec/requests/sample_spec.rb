@@ -6,7 +6,6 @@ describe 'Sample CRUD', type: :request do
     "./spec/support/sample.wav", "audio/wav") }
 
   let(:token) { FactoryGirl.create(:oauth_token, resource_owner_id: user.id) }
-
   let(:result) { JSON.parse(response.body) }
   
   context 'PUT /samples' do 
@@ -15,7 +14,6 @@ describe 'Sample CRUD', type: :request do
       put '/v3/samples', 
       params: {
         name: 'name',
-        private: false,
         file: attachment,
         low_label: 'not R',
         high_label: 'R'
@@ -65,14 +63,11 @@ describe 'Sample CRUD', type: :request do
     end
 
     context 'tags / with elasticsearch' do
-      # Don't require ES in test, just ensure it happens
       before do
-        allow(::Sample).to receive(:by_tags)
-          .with(tags)
-          .and_return(OpenStruct.new(
-            records: ::Sample.joins(:tags).where(
+        allow_any_instance_of(Kagu::Query::Elastic).to receive(:search)
+          .with('tags' => tags)
+          .and_return(::Sample.joins(:tags).where(
               tags: { name: tags.split }
-            ) 
           ))
 
         samples.last(5).each do |s|
@@ -87,7 +82,7 @@ describe 'Sample CRUD', type: :request do
 
       let(:tags) { 'foo bar' }
 
-      it 'finds all the tagged records' do
+      it 'calls the adapter' do
         expect(response.code).to eql('200')
         expect(result['samples'].count).to eql(5)
       end
@@ -123,7 +118,7 @@ describe 'Sample CRUD', type: :request do
   end
 
   context 'UPDATE /samples' do
-    let!(:sample) { FactoryGirl.create(:sample, user_id: token.resource_owner_id) }
+    let(:sample) { FactoryGirl.create(:sample, user_id: token.resource_owner_id) }
 
     context 'update a sample' do
       before do
@@ -139,6 +134,45 @@ describe 'Sample CRUD', type: :request do
         expect(response.code).to eql('200')
         expect(::Sample.find(sample.id).name).to eql('new_name')
       end
+    end
+  end
+
+  context 'PUT /samples/:id/organizations/:organization_id' do
+    let(:sample) do
+      FactoryGirl.create(:sample, user_id: user.id)
+    end
+
+    let(:organization) do
+      FactoryGirl.create(:organization, users: [user])
+    end
+
+    before do
+      put "/v3/samples/#{sample.id}/organizations/#{organization.id}",
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    it 'should associate the two' do
+      expect(response.code).to eql('201')
+      expect(sample.organizations).to include(organization)
+    end
+  end
+
+  context 'DELETE /samples/:id/organizations/:organization_id' do
+    let(:sample) do
+      FactoryGirl.create(:sample, user_id: user.id, organizations: [
+        FactoryGirl.create(:organization, users: [user])
+      ])
+    end
+
+    before do
+      delete "/v3/samples/#{sample.id}/organizations/#{sample.organizations.first.id}",
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    it 'should disassociate the two' do
+      expect(response.code).to eql('204')
+      sample.reload
+      expect(sample.organizations).to be_empty
     end
   end
 end

@@ -31,6 +31,7 @@ module API
 
     mount Endpoints::Application => '/applications'
     mount Endpoints::Experiment => '/experiments'
+    mount Endpoints::Organization => '/organizations'
     mount Endpoints::Sample => '/samples'
     mount Endpoints::Score => '/scores'
     mount Endpoints::User => '/users'

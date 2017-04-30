@@ -15,6 +15,10 @@ module CanStrap
         can :write, Sample
         can :read, Sample
 
+        # Organizations
+        can :write, Organization
+        can :read, Organization
+
         # Score
         can :read, Score
 

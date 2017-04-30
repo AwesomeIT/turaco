@@ -8,15 +8,9 @@ module API
       desc 'Create a user'
       route_setting :scopes, %(administrator)
       params do
-        requires :email, type: String, desc: 'User email address',
-                         documentation: {
-                           param_type: 'body'
-                         }
+        requires :email, type: String, desc: 'User email address'
         requires :encrypted_password, type: String,
-                                      desc: 'BCrypt hash of user password',
-                                      documentation: {
-                                        param_type: 'body'
-                                      }
+                                      desc: 'BCrypt hash of user password'
       end
       put authorize: [:write, ::User] do
         status 201
@@ -67,21 +61,14 @@ module API
                       documentation: {
                         param_type: 'body'
                       }
-        optional :email, type: String, desc: 'User email address',
-                         documentation: {
-                           param_type: 'body'
-                         }
+        optional :email, type: String, desc: 'User email address'
         optional :encrypted_password, type: String,
-                                      desc: 'BCrypt hash of user password',
-                                      documentation: {
-                                        param_type: 'body'
-                                      }
+                                      desc: 'BCrypt hash of user password'
       end
       post '/:id', authorize: [:write, ::User] do
         status 200
-        declared_params = declared(params, include_missing: false)
         user = ::User.accessible_by(current_ability).find(declared_params[:id])
-        user.update_attributes(declared_params.to_h)
+        user.update_attributes(declared_hash)
         user.save
 
         present(user, with: Entities::User)
