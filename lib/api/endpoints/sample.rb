@@ -13,7 +13,6 @@ module API
                         desc: 'audio sample, to be uploaded to s3'
         requires :low_label, type: String, desc: 'Label for low bound'
         requires :high_label, type: String, desc: 'Label for upper bound'
-        optional :private, type: Boolean, desc: 'Private flag for sample'
       end
       put authorize: [:write, ::Sample] do
         status 201
