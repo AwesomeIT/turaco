@@ -9,6 +9,8 @@ module API
       route_setting :scopes, %w(administrator researcher)
       params do
         requires :name, type: String, desc: 'Name of experiment'
+        optional :active, type: Boolean, desc: 'Active flag for experiment'
+        optional :repeats, type: Integer, desc: 'Times samples can be replayed'
       end
       put authorize: [:write, ::Experiment] do
         status 201
