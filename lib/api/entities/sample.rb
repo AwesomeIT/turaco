@@ -2,6 +2,7 @@
 module API
   module Entities
     class Sample < Base
+      property :id
       property :s3_url
       property :name
       property :low_label
