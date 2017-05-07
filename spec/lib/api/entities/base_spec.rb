@@ -10,11 +10,11 @@ describe API::Entities::Base, type: :request do
       format :json
       formatter :json, Grape::Formatter::Roar
 
-      get '/score' do
+      get '/scores' do
         present(Score.last, with: API::Entities::Score)
       end
 
-      get '/sample' do 
+      get '/samples' do 
         present(Sample.last, with: API::Entities::Sample)
       end
     end
@@ -28,37 +28,40 @@ describe API::Entities::Base, type: :request do
   after { Rails.application.reload_routes! }
 
   context 'HAL' do
-    before { get '/v1/score' }
+    before { get '/v1/scores' }
     let(:results) { JSON.parse(response.body) }
 
     it 'presents the self attribute properly' do
       expect(results).to be_a(Hash)
-      expect(results['links'].map { |l| l['rel'] }).to include('self')
       expect(
-        results['links'].find { |l| l['rel'] == 'self' }['href']
-      ).to eql("http://www.example.com/v1/score/#{score.id}")
+        results['_links']['self']['href']
+      ).to eql("http://www.example.com/v1/scores/#{score.id}")
     end
 
-    it 'provides HAL-navigable routes for resources' do
+    it 'provides HAL-navigable routes for embedded resources' do
       resources = %w(user experiment sample)
-      expect(results.keys).to include(*resources)
+      expect(results['_embedded'].keys).to include(*resources)
 
       resources.each do |r|
-        expect(results[r]['links'].first['href']).to eql(
-          "http://www.example.com/v1/#{r}/#{score.send(r).id}"
+        expect(results['_embedded'][r]['_links']['self']['href']).to eql(
+          "http://www.example.com/v1/#{r.pluralize}/#{score.send(r).id}"
         )
       end
     end
 
     context 'serializing has many relationships' do 
-      let(:sample) { FactoryGirl.create(:sample) }
+      let(:sample) do
+        FactoryGirl.create(:sample).tap do |s|
+          s.tags << %w(foo bar baz)
+        end
+      end
       let!(:scores) { FactoryGirl.create_list(:score, 10, sample: sample)}
 
-      before { get '/v1/sample' }
+      before { get '/v1/samples' }
 
       it 'should display the correct resource URLs' do 
         resources = %w(experiments scores)
-        expect(results.keys).to include(*resources)
+        expect(results['_links'].keys).to include(*resources)
       end
     end
   end

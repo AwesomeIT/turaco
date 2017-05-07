@@ -9,7 +9,10 @@ module API
       property :high_label
       property :hypothesis
 
-      collection :tags, decorator: API::Entities::Tag
+      relation :experiments
+      relation :scores
+
+      collection :tags { property :name }
     end
   end
 end

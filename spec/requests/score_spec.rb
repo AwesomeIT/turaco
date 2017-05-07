@@ -24,15 +24,12 @@ describe 'Score CRUD', type: :request do
     end
 
     it 'should set the proper ids' do
-      expect(result["user"]["links"].first["href"]).to eql(
-        "http://www.example.com/v3/user/#{user.id}"
-      )
-      expect(result["experiment"]["links"].first["href"]).to eql(
-        "http://www.example.com/v3/experiment/#{experiment.id}"
-      )
-      expect(result["sample"]["links"].first["href"]).to eql(
-        "http://www.example.com/v3/sample/#{sample.id}"
-      )
+      expect(result['_embedded']["user"]["id"])
+        .to eql(user.id)
+      expect(result['_embedded']["experiment"]["id"])
+        .to eql(experiment.id)
+      expect(result['_embedded']["sample"]["id"])
+        .to eql(sample.id)
     end
 
     context 'with invalid/missing parameters' do 

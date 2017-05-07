@@ -3,6 +3,9 @@ module API
   module Entities
     class User < Base
       property :email
+      property :id
+
+      collection :tags { property :name }
     end
   end
 end

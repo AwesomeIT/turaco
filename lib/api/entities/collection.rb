@@ -2,9 +2,6 @@
 module API
   module Entities
     class Collection < Base
-      include Roar::JSON
-      include Roar::Hypermedia
-
       class << self
         # TODO: Find a better way to do this
         # If `representable` or `grape-roar` change their interfaces we are SOL
@@ -25,8 +22,7 @@ module API
           str_klass = relation.klass.name.demodulize
 
           collection(str_klass.downcase.pluralize.to_sym,
-                     extend: "API::Entities::#{str_klass}".constantize,
-                     class: relation.klass)
+                     extend: "API::Entities::#{str_klass}".constantize)
 
           relation.class.send(
             :define_method,
