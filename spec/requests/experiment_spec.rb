@@ -76,7 +76,7 @@ describe 'Experiment CRUD', type: :request do
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
-      let!(:result) { JSON.parse(response.body) }
+      let(:result) { JSON.parse(response.body) }
 
       it 'should retrieve an existing experiment' do
         expect(response.code).to eql('200')
@@ -99,7 +99,7 @@ describe 'Experiment CRUD', type: :request do
       end
     end
 
-    context 'with elasticsearch' do
+    context 'tags / with elasticsearch' do
       before do
         allow_any_instance_of(Kagu::Query::Elastic).to receive(:search)
           .with('tags' => tags)

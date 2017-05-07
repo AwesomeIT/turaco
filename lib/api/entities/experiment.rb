@@ -7,7 +7,7 @@ module API
       property :repeats
       property :active
 
-      collection :tags, decorator: API::Entities::Tag
+      collection :tags { property :name }
     end
   end
 end

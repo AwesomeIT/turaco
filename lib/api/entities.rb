@@ -10,7 +10,6 @@ module API
     autoload :Organization
     autoload :Sample
     autoload :Score
-    autoload :Tag
     autoload :User
   end
 end

@@ -3,46 +3,64 @@ module API
   module Entities
     class Base < Grape::Roar::Decorator
       include Roar::JSON
+      include Roar::JSON::HAL
       include Roar::Hypermedia
 
       class << self
-        def inherited(child)
-          super(child)
-
-          klass = "Kagu::Models::#{child.to_s.demodulize}".safe_constantize
-          return unless klass.present?
-
-          klass.reflections
-               .each_pair { |n, m| child.class_eval(generate_eval(n, m).to_s) }
-        end
-
-        private
-
-        # TODO: L29 is awful
-        # rubocop:disable Metrics/MethodLength
-        def generate_eval(name, meta)
-          return unless API::Entities.constants.include?(
-            name.singularize.camelize.to_sym
-          )
-
-          case meta
+        def relation(rname)
+          rname = rname.to_s
+          case activerecord_klass.reflections[rname]
           when ActiveRecord::Reflection::BelongsToReflection
-            "property :#{name.singularize}, "\
-              "decorator: API::Entities::#{name.camelize}"
+            map_single(rname)
           when ActiveRecord::Reflection::HasManyReflection,
-              ActiveRecord::Reflection::HasAndBelongsToManyReflection
-            "collection :#{meta.plural_name}, "\
-              'decorator: API::Entities::Collection'
-          else ''
+               ActiveRecord::Reflection::HasAndBelongsToManyReflection,
+               ActiveRecord::Reflection::ThroughReflection
+            map_collection(rname)
           end
         end
-        # rubocop:enable Metrics/MethodLength
+
+        protected
+
+        def activerecord_klass
+          "Kagu::Models::#{name.demodulize}".safe_constantize
+        end
+
+        def decorator_for(relation)
+          { embedded: true,
+            extend: "API::Entities::#{relation.singularize.camelize}"
+              .safe_constantize }
+        end
+
+        def map_single(rname)
+          property rname, decorator_for(rname)
+        end
+
+        def map_collection(rname)
+          links rname do |opts|
+            request = Grape::Request.new(opts[:env])
+            represented.send(rname).map do |other|
+              { href: "#{request.base_url}#{request.script_name}/"\
+                      "#{rname}/#{other.id}",
+                id: other.id }
+            end
+          end
+        end
+      end
+
+      def name_for_represented(represented)
+        klass_name = case represented
+                     when ActiveRecord::Relation
+                       represented.klass.name
+                     else
+                       represented.class.name
+                     end
+        klass_name.demodulize.pluralize.downcase
       end
 
       link :self do |opts|
         request = Grape::Request.new(opts[:env])
         "#{request.base_url}#{request.script_name}/"\
-          "#{represented.class.name.demodulize.downcase}/"\
+          "#{name_for_represented(represented)}/"\
           "#{represented.try(:id)}"
       end
     end

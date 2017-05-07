@@ -5,7 +5,11 @@ module API
       property :id
       property :name
 
-      collection :tags, decorator: API::Entities::Tag
+      relation :users
+      relation :experiments
+      relation :samples
+
+      collection :tags { property :name }
     end
   end
 end

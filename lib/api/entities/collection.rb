@@ -2,37 +2,44 @@
 module API
   module Entities
     class Collection < Base
-      include Roar::JSON
-      include Roar::Hypermedia
-
       class << self
-        # TODO: Find a better way to do this
-        # If `representable` or `grape-roar` change their interfaces we are SOL
-        # with a breaking change if our lockfile fails us.
         def represent(object, _options = {})
-          serializer = clone
-
-          serializer.extract_from_relation(
-            object
-          ) if object.is_a?(ActiveRecord::Relation)
-
-          serializer.new(object)
+          return super unless object.is_a?(ActiveRecord::Relation)
+          decorate_relation(object)
+          serializer_for(object)
         end
 
         protected
 
-        def extract_from_relation(relation)
-          str_klass = relation.klass.name.demodulize
+        def create_serializer(klass)
+          representer_cache[klass] = Class.new(Base)
+          representer_cache[klass].class_exec(klass.name) do |kn|
+            collection(
+              kn.demodulize.downcase.pluralize.to_sym,
+              extend: "API::Entities::#{kn.demodulize}".constantize
+            )
+          end
+        end
 
-          collection(str_klass.downcase.pluralize.to_sym,
-                     extend: "API::Entities::#{str_klass}".constantize,
-                     class: relation.klass)
-
+        def decorate_relation(relation)
           relation.class.send(
             :define_method,
-            str_klass.downcase.pluralize,
+            relation.klass.name.demodulize.downcase.pluralize,
             -> { self }
           )
+        end
+
+        def representer_cache
+          @representer_cache ||= {}
+        end
+
+        def serializer_for(object)
+          klass = object.klass
+          return representer_cache[klass]
+                 .new(object) if representer_cache.key?(klass)
+
+          create_serializer(klass)
+          representer_cache[klass].new(object)
         end
       end
     end
