@@ -99,7 +99,7 @@ describe 'Experiment CRUD', type: :request do
       end
     end
 
-    context 'tags / with elasticsearch' do
+    context 'with elasticsearch' do
       before do
         allow_any_instance_of(Kagu::Query::Elastic).to receive(:search)
           .with('tags' => tags)

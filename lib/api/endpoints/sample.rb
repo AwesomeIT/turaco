@@ -51,7 +51,7 @@ module API
         status 200
 
         samples = Kagu::Query::Elastic.for(::Sample).search(
-          declared_hash.extract!('tags')
+          declared_hash.extract!(*%w(tags name))
         ).where(declared_hash).accessible_by(current_ability)
 
         present(samples, with: Entities::Collection)
