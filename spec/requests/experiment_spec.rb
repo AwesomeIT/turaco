@@ -99,7 +99,7 @@ describe 'Experiment CRUD', type: :request do
       end
     end
 
-    context 'tags / with elasticsearch' do
+    context 'with elasticsearch' do
       before do
         allow_any_instance_of(Kagu::Query::Elastic).to receive(:search)
           .with('tags' => tags)
@@ -122,23 +122,6 @@ describe 'Experiment CRUD', type: :request do
       it 'calls the adapter' do
         expect(response.code).to eql('200')
         expect(results['experiments'].count).to eql(5)
-      end
-    end
-
-    context 'with querystring filters' do 
-      before do
-        experiments.last.name = 'foobar'
-        experiments.last.save
-
-        get '/v3/experiments', params: { name: 'foobar' }, headers: { 
-          'Authorization' => "Bearer #{token.token}" 
-        }
-      end
-
-      it 'should return the correct experiments' do 
-        expect(response.code).to eql('200')
-        expect(results['experiments'].first['links'].first['href'])
-        .to eql("http://www.example.com/v3/experiment/#{experiments.last.id}")
       end
     end
   end

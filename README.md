@@ -82,6 +82,9 @@ systemctl start elasticsearch
 brew services elasticsearch start
 ```
 
+Pro tip: 
+[Spring](https://github.com/rails/spring) preloads your Rails application to make booting faster while you work on it locally. We modify a lot of our external dependencies as part of our build process, so we have to kill spring every time we want that code to be reloaded. To avoid this problem, `export DISABLE_SPRING=1` (or put it in your `.env` file).
+
 Finally: `rails s`
 
 ## API
