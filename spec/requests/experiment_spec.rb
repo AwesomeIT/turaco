@@ -124,22 +124,5 @@ describe 'Experiment CRUD', type: :request do
         expect(results['experiments'].count).to eql(5)
       end
     end
-
-    context 'with querystring filters' do 
-      before do
-        experiments.last.name = 'foobar'
-        experiments.last.save
-
-        get '/v3/experiments', params: { name: 'foobar' }, headers: { 
-          'Authorization' => "Bearer #{token.token}" 
-        }
-      end
-
-      it 'should return the correct experiments' do 
-        expect(response.code).to eql('200')
-        expect(results['experiments'].first['_links']['self']['href'])
-        .to eql("http://www.example.com/v3/experiments/#{experiments.last.id}")
-      end
-    end
   end
 end
