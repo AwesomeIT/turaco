@@ -32,7 +32,7 @@ module API
         status 200
 
         organizations = Kagu::Query::Elastic.for(::Organization).search(
-          declared_hash.extract!(*%w(tags name))
+          declared_hash.extract!('tags', 'name')
         ).where(declared_hash).accessible_by(current_ability)
 
         present(organizations, with: Entities::Collection)
