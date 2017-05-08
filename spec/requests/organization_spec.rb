@@ -96,4 +96,26 @@ describe 'Organization CRUD', type: :request do
       expect(org.name).to eql(new_name)
     end
   end
+
+  context 'POST /organizations/:id/user' do
+    let(:org) do
+      FactoryGirl.create(:organization, users: [User.find(token.resource_owner_id)])
+    end
+
+    let(:user) do
+      FactoryGirl.create(:user)
+    end
+
+    before do
+      post "/v3/organizations/#{org.id}/user",
+        params: {email: user.email},
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    it 'should add the user to the organization' do
+      expect(response.code).to eql('204')
+      org.reload
+      expect(org.users).to include(user)
+    end
+  end
 end

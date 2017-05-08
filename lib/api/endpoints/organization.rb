@@ -41,7 +41,7 @@ module API
       desc 'Retrieve an organization by ID'
       route_setting :scopes, %w(administrator researcher participant)
       params do
-        requires :id, type: String, desc: 'ID of organization'
+        requires :id, type: Integer, desc: 'ID of organization'
       end
       get '/:id', authorize: [:write, ::Organization] do
         status 200
@@ -54,7 +54,7 @@ module API
       desc 'Update an organization'
       route_setting :scopes, %w(administrator researcher)
       params do
-        requires :id, type: String, desc: 'ID of organization'
+        requires :id, type: Integer, desc: 'ID of organization'
         optional :name, type: String, desc: 'Name of organization',
                         documentation: { param_type: 'body' }
       end
@@ -67,6 +67,22 @@ module API
         org.save
 
         present(org, with: Entities::Organization)
+      end
+
+      desc 'Add a user to an organization'
+      route_setting :scopes, %w(administrator researcher)
+      params do
+        requires :id, type: Integer, desc: 'ID of organization'
+        requires :email, type: String, desc: 'Email of user'
+      end
+      post '/:id/user', authorize: [:write, ::Organization] do
+        status 204
+
+        org = ::Organization.accessible_by(current_ability)
+                            .find(declared_params[:id])
+        user = ::User.find_by(email: declared_params[:email])
+
+        org.users << user
       end
     end
   end
