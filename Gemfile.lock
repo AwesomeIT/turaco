@@ -1,8 +1,7 @@
-GIT
-  remote: git://github.com/birdfeed/kagu.git
-  revision: dcb7f83017ed0f8c03c0ee89233731ff8d4b0dcc
+PATH
+  remote: /home/mach/Workspace/kagu
   specs:
-    kagu (0.3.0)
+    kagu (0.3.1)
       activerecord
       activesupport
       aws-sdk
