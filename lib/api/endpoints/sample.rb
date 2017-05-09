@@ -17,14 +17,14 @@ module API
       put authorize: [:write, ::Sample] do
         status 201
 
-        s3_url = Kagu::Adapters::S3.upload_file(
+        s3_object = Kagu::Adapters::S3.upload_file(
           params[:file]['tempfile'].path,
           params[:file]['filename']
         )
 
         present(
           ::Sample.create(declared_hash.except(:file).merge(
-                            s3_url: s3_url, user_id: current_user.id
+                            s3_key: s3_object.key, user_id: current_user.id
           )), with: Entities::Sample
         )
       end
@@ -35,11 +35,7 @@ module API
       end
       get '/:id', authorize: [:read, ::Sample] do
         status 200
-
-        present(
-          ::Sample.find(declared_params[:id]),
-          with: Entities::Sample
-        )
+        present(::Sample.find(declared_params[:id]), with: Entities::Sample)
       end
 
       desc 'Retrieve a list of samples'
@@ -75,12 +71,12 @@ module API
       end
       post '/:id', authorize: [:write, ::Sample] do
         status 200
-        declared_params = declared(params, include_missing: false)
-        sample =
-          ::Sample.accessible_by(current_ability)
-                  .find(declared_params[:id])
+
+        sample = ::Sample.accessible_by(current_ability)
+                         .find(declared_params[:id])
+
         sample.update_attributes(declared_hash)
-        sample.save
+
         present(sample, with: Entities::Sample)
       end
 

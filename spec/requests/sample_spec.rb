@@ -10,7 +10,9 @@ describe 'Sample CRUD', type: :request do
   
   context 'PUT /samples' do 
     before do
-      allow(Kagu::Adapters::S3).to receive(:upload_file).and_return(true)
+      allow(Kagu::Adapters::S3).to receive(:upload_file).and_return(
+        OpenStruct.new(key: 'abcd')
+      )
 
       put '/v3/samples', 
       params: {
