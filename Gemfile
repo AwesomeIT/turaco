@@ -72,11 +72,17 @@ gem 'rspec-rails', '3.5.2'
 # Laziness
 gem 'gemrat', '0.4.6'
 
-# Database models
-gem 'kagu', git: 'git://github.com/birdfeed/kagu.git'
+# TalkBirdy standard library
+kagu_cfg = if ENV.key?('KAGU_PATH')
+  { path: ENV['KAGU_PATH'] }
+else
+  { git: 'git://github.com/birdfeed/kagu.git' }
+end
+
+gem 'kagu', kagu_cfg.merge(require: false)
 
 # Authentication system (if we want ACLs we can use CanCan but it's old as shit)
-gem 'devise', '4.2.0'
+gem 'devise', '4.2.1'
 
 # API
 gem 'grape', '0.19.1'

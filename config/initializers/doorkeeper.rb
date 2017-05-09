@@ -21,6 +21,6 @@ Doorkeeper.configure do
 
   # Patch additional relationship into model
   class Doorkeeper::Application < ActiveRecord::Base
-    belongs_to :user, class_name: User
+    belongs_to :user, class_name: ::User
   end 
 end
