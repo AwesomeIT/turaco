@@ -43,13 +43,17 @@ describe 'Experiment CRUD', type: :request do
 
   context 'UPDATE /experiments' do
     let(:experiment) { FactoryGirl.create(:experiment, user_id: token.resource_owner_id) }
+    let(:samples) do
+      FactoryGirl.create_list(:sample, 5, user_id: token.resource_owner_id)
+    end
 
     context 'update an experiment' do
       before do
         post "/v3/experiments/#{experiment.id}",
         params: {
           name: 'new_name',
-          organization_id: organization.id
+          organization_id: organization.id,
+          sample_ids: samples.map(&:id)
         },
         headers: { 'Authorization' => "Bearer #{token.token}" }
       end
@@ -61,6 +65,7 @@ describe 'Experiment CRUD', type: :request do
         experiment.reload
         expect(experiment.name).to eql('new_name')
         expect(experiment.organization).to eql(organization)
+        expect(experiment.samples).to include(*samples)
       end
     end
   end
