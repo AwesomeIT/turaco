@@ -43,7 +43,7 @@ describe 'Experiment CRUD', type: :request do
 
   context 'UPDATE /experiments' do
     let(:experiment) { FactoryGirl.create(:experiment, user_id: token.resource_owner_id) }
-    let!(:samples) do
+    let(:samples) do
       FactoryGirl.create_list(:sample, 5, user_id: token.resource_owner_id)
     end
 
@@ -53,7 +53,7 @@ describe 'Experiment CRUD', type: :request do
         params: {
           name: 'new_name',
           organization_id: organization.id,
-          sample_ids: samples.map{ |x| x.id }
+          sample_ids: samples.map(&:id)
         },
         headers: { 'Authorization' => "Bearer #{token.token}" }
       end
