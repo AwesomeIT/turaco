@@ -7,6 +7,8 @@ module API
       property :repeats
       property :active
 
+      relation :samples
+      
       collection :tags { property :name }
     end
   end
