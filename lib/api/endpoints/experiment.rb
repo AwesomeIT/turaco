@@ -86,15 +86,17 @@ module API
 
         # Append organization if present
         if declared_params.key?(:organization_id)
-          experiment.organization = ::Organization.find(
-            declared_params[:organization_id]
+          experiment.organization = 
+            ::Organization.accessible_by(current_ability).find(
+              declared_params[:organization_id]
           )
         end
 
         # Update samples if a list was provided
         if declared_params.key?(:sample_ids)
-          experiment.samples = ::Sample.find(
-            declared_params[:sample_ids]
+          experiment.samples = 
+            ::Sample.accessible_by(current_ability).find(
+              declared_params[:sample_ids]
           )
         end
 
