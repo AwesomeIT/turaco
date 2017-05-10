@@ -70,17 +70,18 @@ module API
         optional :active, type: Boolean, desc: 'Flag for experiment being used'
         optional :repeats, type: Integer, desc: 'Times a sample can be played'
         optional :organization_id, type: Integer, desc: 'Organization ID'
+        optional :sample_ids, type: Array, desc: 'Samples to associate'
       end
       post '/:id', authorize: [:write, ::Experiment] do
         status 200
-        declared_params = declared(params, include_missing: false)
+
         experiment =
           ::Experiment.accessible_by(current_ability)
                       .find(declared_params[:id])
 
         # Update regular attributes first
         experiment.update_attributes(
-          declared_hash.except(:organization_id)
+          declared_hash.except(:organization_id, :sample_ids)
         )
 
         # Append organization if present
@@ -88,9 +89,16 @@ module API
           experiment.organization = ::Organization.find(
             declared_params[:organization_id]
           )
-
-          experiment.save
         end
+
+        # Update samples if a list was provided
+        if declared_params.key?(:sample_ids)
+          experiment.samples = ::Sample.find(
+            declared_params[:sample_ids]
+          )
+        end
+
+        experiment.save
 
         present(experiment, with: Entities::Experiment)
       end
