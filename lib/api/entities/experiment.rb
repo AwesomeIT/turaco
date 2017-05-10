@@ -8,7 +8,7 @@ module API
       property :active
 
       relation :samples
-      
+
       collection :tags { property :name }
     end
   end
