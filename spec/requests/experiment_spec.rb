@@ -32,7 +32,7 @@ describe 'Experiment CRUD', type: :request do
           headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
-      let!(:result) { JSON.parse(response.body) }
+      let(:result) { JSON.parse(response.body) }
 
       it 'should have deleted the experiment' do
         expect(response.code).to eql('204')

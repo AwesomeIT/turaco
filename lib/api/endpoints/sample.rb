@@ -62,9 +62,12 @@ module API
       end
       delete '/:id', authorize: [:write, ::Sample] do
         status 204
+
         sample = ::Sample.find(declared_params[:id])
         Events::PostgresSink.call(sample)
         sample.destroy!
+
+        nil
       end
 
       desc 'Update a sample'
