@@ -3,5 +3,7 @@ module Events
   extend ActiveSupport::Autoload
 
   autoload :Base
+
+  autoload :EsManage
   autoload :PostgresSink
 end
