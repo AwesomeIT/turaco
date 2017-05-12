@@ -1,4 +1,5 @@
-module Kafka
+# frozen_string_literal: true
+module Events
   class PostgresSink < Base
     attr_reader :action
 
@@ -6,7 +7,7 @@ module Kafka
       topic t, required: false
     end
 
-    def respond(action, model)
+    def respond(model, action = :changed)
       @action = action
       action_signature = "#{model.class.name.demodulize.underscore}_#{action}"
 
@@ -16,16 +17,16 @@ module Kafka
       ) if self.class.private_method_defined?(action_signature)
 
       # Perform for all records and actions
-      respond_to :es_manage, 
-                  message: model_base_message(model)
-                           .merge(action: :update_record)
+      respond_to :es_manage, message: model_base_message(model).merge(
+        action: :update_record
+      )
     end
 
     private
 
     def sample_created(model)
-      respond_to :sample_speech_recognition, 
-                  message: model_base_message(model)
+      respond_to :sample_speech_recognition,
+                 message: model_base_message(model)
     end
   end
 end

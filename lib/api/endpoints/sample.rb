@@ -23,10 +23,11 @@ module API
         )
 
         sample = ::Sample.create(declared_hash.except(:file).merge(
-          s3_key: s3_object.key, user_id: current_user.id
-        ))
+            s3_key: s3_object.key, user_id: current_user.id
+          )
+        )
 
-        Kafka::PostgresSink.call(:created, sample)
+        Events::PostgresSink.call(sample, :created)
         present(sample, with: Entities::Sample)
       end
 
@@ -61,7 +62,9 @@ module API
       end
       delete '/:id', authorize: [:write, ::Sample] do
         status 204
-        ::Sample.delete(declared(params)[:id])
+        sample = ::Sample.find(declared_params[:id])
+        Events::PostgresSink.call(sample)
+        sample.destroy!
       end
 
       desc 'Update a sample'
@@ -77,6 +80,7 @@ module API
                          .find(declared_params[:id])
 
         sample.update_attributes(declared_hash)
+        Events::PostgresSink.call(sample)
 
         present(sample, with: Entities::Sample)
       end

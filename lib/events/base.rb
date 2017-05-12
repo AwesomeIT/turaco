@@ -1,10 +1,8 @@
-module Kafka
+# frozen_string_literal: true
+module Events
   class Base < Karafka::BaseResponder
-    include Singleton
-
-    class << self
-      extend Forwardable
-      def_delegator :instance, :call
+    def self.call(*data)
+      new.call(*data)
     end
 
     def call(*data)
@@ -13,7 +11,7 @@ module Kafka
       deliver!
     end
 
-    def respond(*args)
+    def respond(*_args)
       raise NotImplementedError
     end
 
