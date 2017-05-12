@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 module Events
   class PostgresSink < Base
-    attr_reader :action
+    attr_reader :action, :model
 
     %i(sample_speech_recognition es_manage).each do |t|
       topic t, required: false
@@ -9,6 +9,8 @@ module Events
 
     def respond(model, action = :changed)
       @action = action
+      @model = model
+
       action_signature = "#{model.class.name.demodulize.underscore}_#{action}"
 
       # If additional pipeline steps are necessary
@@ -16,13 +18,22 @@ module Events
         action_signature, model
       ) if self.class.private_method_defined?(action_signature)
 
-      # Perform for all records and actions
-      respond_to :es_manage, message: model_base_message(model).merge(
-        action: :update_record
-      )
+      # For all records
+      update_elasticsearch
     end
 
     private
+
+    def update_elasticsearch
+      es_mapped_action = case action
+      when :destroyed then :destroy_record
+      else :update_record
+      end
+
+      respond_to :es_manage, message: model_base_message(model).merge(
+        action: es_mapped_action
+      )
+    end
 
     def sample_created(model)
       respond_to :sample_speech_recognition,
