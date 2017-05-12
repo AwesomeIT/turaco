@@ -22,11 +22,12 @@ module API
           params[:file]['filename']
         )
 
-        present(
-          ::Sample.create(declared_hash.except(:file).merge(
-                            s3_key: s3_object.key, user_id: current_user.id
-          )), with: Entities::Sample
-        )
+        sample = ::Sample.create(declared_hash.except(:file).merge(
+          s3_key: s3_object.key, user_id: current_user.id
+        ))
+
+        Kafka::PostgresSink.call(:created, sample)
+        present(sample, with: Entities::Sample)
       end
 
       desc 'Retrieve a sample'
