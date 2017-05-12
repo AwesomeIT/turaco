@@ -21,6 +21,7 @@ module API
         new_user.save(validate: false)
         new_user.reload
 
+        Events::PostgresSink.call(new_user)
         present(new_user, with: Entities::User)
       end
 
@@ -71,6 +72,7 @@ module API
         user.update_attributes(declared_hash)
         user.save
 
+        Events::PostgresSink.call(user)
         present(user, with: Entities::User)
       end
     end

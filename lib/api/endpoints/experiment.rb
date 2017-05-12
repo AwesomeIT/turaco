@@ -15,11 +15,12 @@ module API
       put authorize: [:write, ::Experiment] do
         status 201
 
-        present(
-          ::Experiment.create(
-            declared_hash.merge(user_id: current_user.id)
-          ), with: Entities::Experiment
+        experiment = ::Experiment.create(
+          declared_hash.merge(user_id: current_user.id)
         )
+        Events::PostgresSink.call(experiment)
+
+        present(experiment, with: Entities::Experiment)
       end
 
       desc 'Retrieve an experiment'
@@ -59,7 +60,12 @@ module API
       end
       delete '/:id', authorize: [:write, ::Experiment] do
         status 204
-        ::Experiment.delete(declared_params[:id])
+
+        experiment = ::Experiment.find(declared_params[:id])
+        Events::PostgresSink.call(experiment, :destroyed)
+        experiment.destroy!
+
+        nil
       end
 
       desc 'Update an experiment'
@@ -101,6 +107,7 @@ module API
         end
 
         experiment.save
+        Events::PostgresSink.call(experiment)
 
         present(experiment, with: Entities::Experiment)
       end
