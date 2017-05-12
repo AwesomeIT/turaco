@@ -8,7 +8,7 @@ module Events
     def call(*data)
       respond(*data)
       validate!
-      deliver!
+      deliver! unless Rails.env.test?
     end
 
     def respond(*_args)
