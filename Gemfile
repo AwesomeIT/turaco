@@ -124,9 +124,7 @@ gem 'rack-cors', '0.4.1', require: 'rack/cors'
 # Sexier queries
 gem 'baby_squeel', '1.1.4', require: 'baby_squeel'
 
-# Kafka client
-gem 'waterdrop', '0.3.2.3'
-
 # API docs
 gem 'grape-swagger', '0.27.0'
 gem 'swagger_engine', '0.0.3'
+gem 'karafka', '0.5.0.2'
