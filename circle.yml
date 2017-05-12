@@ -1,3 +1,7 @@
+machine:
+  services: 
+    - docker
+
 database:
   override:
     - git clone https://github.com/awesomeit/kagu kagu
