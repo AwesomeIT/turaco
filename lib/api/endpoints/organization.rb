@@ -18,6 +18,7 @@ module API
         new_org.users << current_user
         new_org.save
 
+        Events::PostgresSink.call(new_org)
         present(new_org, with: Entities::Organization)
       end
 
@@ -66,6 +67,7 @@ module API
         org.update_attributes(declared_hash)
         org.save
 
+        Events::PostgresSink.call(org)
         present(org, with: Entities::Organization)
       end
 
