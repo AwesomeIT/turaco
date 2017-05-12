@@ -26,9 +26,9 @@ module Events
 
     def update_elasticsearch
       es_mapped_action = case action
-      when :destroyed then :destroy_record
-      else :update_record
-      end
+                         when :destroyed then :destroy_record
+                         else :update_record
+                         end
 
       respond_to :es_manage, message: model_base_message(model).merge(
         action: es_mapped_action

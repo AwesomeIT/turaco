@@ -62,9 +62,9 @@ module API
         status 204
 
         experiment = ::Experiment.find(declared_params[:id])
-        Events::PostgresSink.call(experiment)
+        Events::PostgresSink.call(experiment, :destroyed)
         experiment.destroy!
-        
+
         nil
       end
 
@@ -108,7 +108,7 @@ module API
 
         experiment.save
         Events::PostgresSink.call(experiment)
-        
+
         present(experiment, with: Entities::Experiment)
       end
     end

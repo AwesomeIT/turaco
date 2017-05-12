@@ -22,9 +22,9 @@ module API
           params[:file]['filename']
         )
 
-        sample = ::Sample.create(declared_hash.except(:file).merge(
-            s3_key: s3_object.key, user_id: current_user.id
-          )
+        sample = ::Sample.create(
+          declared_hash.except(:file)
+                       .merge(s3_key: s3_object.key, user_id: current_user.id)
         )
 
         Events::PostgresSink.call(sample, :created)
@@ -64,7 +64,7 @@ module API
         status 204
 
         sample = ::Sample.find(declared_params[:id])
-        Events::PostgresSink.call(sample)
+        Events::PostgresSink.call(sample, :destroyed)
         sample.destroy!
 
         nil
