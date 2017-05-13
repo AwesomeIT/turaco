@@ -9,6 +9,8 @@ module API
       property :high_label
       property :hypothesis
       property :private_url
+      property :created_at
+      property :updated_at
 
       relation :experiments
       relation :scores

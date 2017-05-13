@@ -6,6 +6,8 @@ module API
       property :name
       property :repeats
       property :active
+      property :created_at
+      property :updated_at
 
       relation :samples
 

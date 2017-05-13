@@ -1,7 +1,7 @@
 # App class
 class App < Karafka::App
   setup do |config|
-    config.kafka.hosts = ENV['KAFKA_HOSTS'].split(',')
+    config.kafka.hosts = ENV.fetch('KAFKA_HOSTS', '').split(',')
 
     config.name = 'talkbirdy-myna'
     config.redis = { url: case ENV['KARAFKA_ENV']
