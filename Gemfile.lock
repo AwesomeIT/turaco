@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: 5faf4064c6eb8109dc41a21cdeeba09ea7e5ab85
+  revision: 102bf5f2c15de2d59d8844f770f7a5cc2022116a
   specs:
-    kagu (0.3.1)
+    kagu (0.3.2)
       activerecord
       activesupport
       aws-sdk
@@ -281,9 +281,9 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 5.0.2)
       sprockets-rails (>= 2.0.0)
-    rails-dom-testing (2.0.2)
-      activesupport (>= 4.2.0, < 6.0)
-      nokogiri (~> 1.6)
+    rails-dom-testing (2.0.3)
+      activesupport (>= 4.2.0)
+      nokogiri (>= 1.6)
     rails-html-sanitizer (1.0.3)
       loofah (~> 2.0)
     railties (5.0.2)
