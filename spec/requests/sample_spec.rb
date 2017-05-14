@@ -9,6 +9,8 @@ describe 'Sample CRUD', type: :request do
   let(:result) { JSON.parse(response.body) }
   
   context 'PUT /samples' do 
+    let(:tags) { 'foo bar' }
+
     before do
       allow(Kagu::Adapters::S3).to receive(:upload_file).and_return(
         OpenStruct.new(key: 'abcd')
@@ -19,7 +21,8 @@ describe 'Sample CRUD', type: :request do
         name: 'name',
         file: attachment,
         low_label: 'not R',
-        high_label: 'R'
+        high_label: 'R',
+        tags: tags
       }, 
       headers: { 'Authorization' => "Bearer #{token.token}" }
     end
@@ -28,9 +31,11 @@ describe 'Sample CRUD', type: :request do
       expect(Kagu::Adapters::S3)
         .to have_received(:upload_file)
         .with(
-          instance_of(String),attachment.original_filename
+          instance_of(String), attachment.original_filename
         )
       expect(response.code).to eql('201')
+      expect(Sample.find(result['id']).tags.pluck(:name))
+        .to match_array(tags.split(' '))
     end
 
     context 'with invalid/missing parameters' do 
@@ -120,22 +125,32 @@ describe 'Sample CRUD', type: :request do
     end
   end
 
-  context 'UPDATE /samples' do
-    let(:sample) { FactoryGirl.create(:sample, user_id: token.resource_owner_id) }
+  context 'POST /samples' do
+    let(:sample) do
+      FactoryGirl.create(
+        :sample,
+        user_id: token.resource_owner_id
+      ).tap { |s| s.tags << %w(foo bar baz) } 
+    end
 
     context 'update a sample' do
+      let(:new_tags) { %w(foo bar new) }
+
       before do
         post "/v3/samples/#{sample.id}",
         params: {
           user_id: user.id,
-          name: 'new_name'
+          name: 'new_name',
+          tags: new_tags.join(' ')
         },
         headers: { 'Authorization' => "Bearer #{token.token}" }
       end
 
       it 'should have updated the sample' do
         expect(response.code).to eql('200')
-        expect(::Sample.find(sample.id).name).to eql('new_name')
+        sample.reload
+        expect(sample.name).to eql('new_name')
+        expect(sample.tags.pluck(:name)).to match_array(new_tags)
       end
     end
   end
