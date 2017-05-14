@@ -11,13 +11,18 @@ module API
         requires :name, type: String, desc: 'Name of experiment'
         optional :active, type: Boolean, desc: 'Active flag for experiment'
         optional :repeats, type: Integer, desc: 'Times samples can be replayed'
+        optional :tags, type: String, desc: 'Whitespace delimited tags'
       end
       put authorize: [:write, ::Experiment] do
         status 201
 
         experiment = ::Experiment.create(
-          declared_hash.merge(user_id: current_user.id)
+          declared_hash.except(:tags).merge(user_id: current_user.id)
         )
+
+        experiment.tags << declared_params[:tags]
+          .split(' ') if declared_params.key?(:tags)
+
         Events::PostgresSink.call(experiment)
 
         present(experiment, with: Entities::Experiment)
@@ -77,32 +82,35 @@ module API
         optional :repeats, type: Integer, desc: 'Times a sample can be played'
         optional :organization_id, type: Integer, desc: 'Organization ID'
         optional :sample_ids, type: Array, desc: 'Samples to associate'
+        optional :tags, type: String, desc: 'Whitespace delimited tags'
       end
       post '/:id', authorize: [:write, ::Experiment] do
         status 200
 
-        experiment =
-          ::Experiment.accessible_by(current_ability)
-                      .find(declared_params[:id])
+        experiment = ::Experiment.accessible_by(current_ability)
+                                 .find(declared_params[:id])
 
-        # Update regular attributes first
-        experiment.update_attributes(
-          declared_hash.except(:organization_id, :sample_ids)
-        )
+        if declared_params.key?(:sample_ids)
+          experiment.samples =
+            ::Sample.accessible_by(current_ability).find(
+              declared_hash.delete(:sample_ids)
+            )
+        end
+
+        if declared_params.key?(:tags)
+          tags = declared_hash.delete(:tags).split(' ')
+          experiment.tags >> (experiment.tags.pluck(:name) - tags)
+          experiment.tags << tags
+        end
+
+        # Update regular attributes
+        experiment.update_attributes(declared_hash.except(:organization_id))
 
         # Append organization if present
         if declared_params.key?(:organization_id)
           experiment.organization =
             ::Organization.accessible_by(current_ability).find(
               declared_params[:organization_id]
-            )
-        end
-
-        # Update samples if a list was provided
-        if declared_params.key?(:sample_ids)
-          experiment.samples =
-            ::Sample.accessible_by(current_ability).find(
-              declared_params[:sample_ids]
             )
         end
 
