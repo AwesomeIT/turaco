@@ -3,7 +3,7 @@ module Events
   class PostgresSink < Base
     attr_reader :action, :model
 
-    %i(sample_speech_recognition es_manage).each do |t|
+    %i(sample_delete_from_s3 sample_speech_recognition es_manage).each do |t|
       topic t, required: false
     end
 
