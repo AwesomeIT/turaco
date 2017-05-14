@@ -22,7 +22,7 @@ module API
         new_user.save(validate: false)
 
         new_user.tags << declared_params[:tags]
-          .split(' ') if declared_params.key?(:tags)
+                         .split(' ') if declared_params.key?(:tags)
 
         Events::PostgresSink.call(new_user)
         present(new_user, with: Entities::User)

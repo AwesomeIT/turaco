@@ -21,7 +21,7 @@ module API
         )
 
         experiment.tags << declared_params[:tags]
-          .split(' ') if declared_params.key?(:tags)
+                           .split(' ') if declared_params.key?(:tags)
 
         Events::PostgresSink.call(experiment)
 

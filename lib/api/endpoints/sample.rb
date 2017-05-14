@@ -29,7 +29,7 @@ module API
         )
 
         sample.tags << declared_params[:tags]
-          .split(' ') if declared_params.key?(:tags)
+                       .split(' ') if declared_params.key?(:tags)
 
         Events::PostgresSink.call(sample, :created)
         present(sample, with: Entities::Sample)
