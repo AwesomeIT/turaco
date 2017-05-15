@@ -9,7 +9,7 @@ module API
       relation :experiments
       relation :samples
 
-      collection :users { %i(email name).each(&method(:property)) }
+      relation :users
     end
   end
 end
