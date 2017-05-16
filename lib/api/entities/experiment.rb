@@ -8,6 +8,7 @@ module API
       property :active
       property :created_at
       property :updated_at
+      property :user_id
 
       relation :samples
 

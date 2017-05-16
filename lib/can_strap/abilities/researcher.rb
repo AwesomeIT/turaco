@@ -23,8 +23,12 @@ module CanStrap
         can :read, Score
 
         # Users
-        can :read, User, user_id: user.id
-        can :write, User, user_id: user.id
+        can :read, User, id: user.id
+
+        can :read, User, id: OrganizationMapping.where(kindable_type: User, organization_id: user.organizations)
+                                                .pluck(:kindable_id)
+
+        can :write, User, id: user.id
       end
     end
   end

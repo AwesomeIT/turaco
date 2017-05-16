@@ -4,7 +4,7 @@ module API
     class Collection < Base
       class << self
         def represent(object, _options = {})
-          return super unless object.is_a?(ActiveRecord::Relation)
+          return super unless object.class < ActiveRecord::Relation
           decorate_relation(object)
           serializer_for(object)
         end
