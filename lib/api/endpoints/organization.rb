@@ -107,6 +107,7 @@ module API
         user = ::User.find_by(email: declared_params[:email])
 
         org.users << user
+        nil
       end
 
       desc 'Get users for an organization'

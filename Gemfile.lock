@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: db97221aa0a41986abbfd00a189f752a72f6c421
+  revision: 3ee79e29dc4f8eb72d02b569daf0da44d23a0be2
   specs:
-    kagu (0.4.2)
+    kagu (0.4.3)
       activerecord
       activesupport
       aws-sdk
