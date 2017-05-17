@@ -23,8 +23,15 @@ module CanStrap
         can :read, Score
 
         # Users
-        can :read, User, user_id: user.id
-        can :write, User, user_id: user.id
+        can :read, User, id: user.id
+
+        # TODO: more efficient query
+        can :read, User, id: user.organizations
+          .map(&:users)
+          .reduce(:merge)
+          &.pluck(:id)
+
+        can :write, User, id: user.id
       end
     end
   end

@@ -82,18 +82,32 @@ describe 'Organization CRUD', type: :request do
       FactoryGirl.create(:organization, users: [User.find(token.resource_owner_id)])
     end
 
+    let(:samples) do
+      FactoryGirl.create_list(:sample, 5, user_id: token.resource_owner_id)
+    end
+
+    let(:experiments) do
+      FactoryGirl.create_list(:experiment, 5, user_id: token.resource_owner_id)
+    end
+
     let(:new_name) { 'foobar' }
 
     before do
       post "/v3/organizations/#{org.id}",
-        params: { name: new_name },
+        params: { 
+          name: new_name,
+          sample_ids: samples.map(&:id),
+          experiment_ids: experiments.map(&:id)
+        },
         headers: { 'Authorization' => "Bearer #{token.token}" }
     end
 
-    it 'should update the organization name' do
+    it 'should update the organization' do
       expect(response.code).to eql('200')
       org.reload
       expect(org.name).to eql(new_name)
+      expect(org.samples).to include(*samples)
+      expect(org.experiments).to include(*experiments)
     end
   end
 
@@ -118,4 +132,28 @@ describe 'Organization CRUD', type: :request do
       expect(org.users).to include(user)
     end
   end
+
+  context 'GET /organizations/:id/users' do
+    let(:users) do
+      FactoryGirl.create_list(:user, 5).push(
+        User.find(token.resource_owner_id)
+      )
+    end
+
+    let(:org) do
+      FactoryGirl.create(:organization, users: users)
+    end
+
+    before do
+      get "/v3/organizations/#{org.id}/users",
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    let(:results) { JSON.parse(response.body) }
+
+    it 'should get the users of an organization' do
+      expect(response.code).to eql('200')
+      expect(results["users"].map { |x| x['id'] }).to include(*users.pluck(:id))
+    end
+  end 
 end

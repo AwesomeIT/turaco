@@ -11,6 +11,7 @@ module API
       property :private_url
       property :created_at
       property :updated_at
+      property :user_id
 
       relation :experiments
       relation :scores

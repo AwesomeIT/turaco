@@ -1,8 +1,8 @@
 GIT
   remote: git://github.com/birdfeed/kagu.git
-  revision: b74ff45b0e670999dfaa92c3485023e50f7fd326
+  revision: db97221aa0a41986abbfd00a189f752a72f6c421
   specs:
-    kagu (0.4.0)
+    kagu (0.4.2)
       activerecord
       activesupport
       aws-sdk
@@ -261,7 +261,7 @@ GEM
     pry-rails (0.3.5)
       pry (>= 0.9.10)
     puma (3.8.2)
-    rack (2.0.2)
+    rack (2.0.3)
     rack-accept (0.4.5)
       rack (>= 0.4)
     rack-cors (0.4.1)

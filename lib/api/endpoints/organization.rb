@@ -58,13 +58,35 @@ module API
         requires :id, type: Integer, desc: 'ID of organization'
         optional :name, type: String, desc: 'Name of organization',
                         documentation: { param_type: 'body' }
+        optional :sample_ids, type: Array, desc: 'IDs of samples'
+        optional :experiment_ids, type: Array, desc: 'IDs of experiments'
       end
       post '/:id', authorize: [:write, ::Organization] do
         status 200
 
         org = ::Organization.accessible_by(current_ability)
                             .find(declared_params[:id])
-        org.update_attributes(declared_hash)
+
+        org.update_attributes(
+          declared_hash.except(:experiment_ids, :sample_ids)
+        )
+
+        # Update experiments if a list was provided
+        if declared_params.key?(:experiment_ids)
+          org.experiments =
+            ::Experiment.accessible_by(current_ability).find(
+              declared_params[:experiment_ids]
+            )
+        end
+
+        # Update samples if a list was provided
+        if declared_params.key?(:sample_ids)
+          org.samples =
+            ::Sample.accessible_by(current_ability).find(
+              declared_params[:sample_ids]
+            )
+        end
+
         org.save
 
         Events::PostgresSink.call(org)
@@ -85,6 +107,23 @@ module API
         user = ::User.find_by(email: declared_params[:email])
 
         org.users << user
+      end
+
+      desc 'Get users for an organization'
+      route_setting :scopes, %w(administrator researcher)
+      params do
+        requires :id, type: Integer, desc: 'ID of organization'
+      end
+      get '/:id/users', authorize: [:read, ::Organization] do
+        status 200
+
+        org = ::Organization.accessible_by(current_ability)
+                            .find(declared_params[:id])
+
+        present(
+          current_user.organizations.find(org.id)&.users,
+          with: Entities::Collection
+        )
       end
     end
   end
