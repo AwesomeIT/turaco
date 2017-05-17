@@ -3,7 +3,7 @@ module Events
   class PostgresSink < Base
     attr_reader :action, :model
 
-    %i(sample_speech_recognition es_manage).each do |t|
+    %i(sample_delete_from_s3 sample_speech_recognition es_manage).each do |t|
       topic t, required: false
     end
 
@@ -38,6 +38,11 @@ module Events
     def sample_created(model)
       respond_to :sample_speech_recognition,
                  message: model_base_message(model)
+    end
+
+    def sample_destroyed(model)
+      respond_to :sample_delete_from_s3,
+                 message: model_base_message(model).merge(s3_key: model.s3_key)
     end
   end
 end

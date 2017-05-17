@@ -11,12 +11,14 @@ describe 'User CRUD', type: :request do
 
   context 'PUT /users' do
     let(:email) { 'test@foo.com' }
+    let(:tags) { %w(foo bar) }
 
     before do
       put '/v3/users',
         params: {
           email: email,
-          encrypted_password: 'foobar'
+          encrypted_password: 'foobar',
+          tags: tags.join(' ')
         }, 
         headers: {
           Authorization: "Bearer #{token.token}"
@@ -25,7 +27,8 @@ describe 'User CRUD', type: :request do
 
     it 'should create the user' do
       expect(response.code).to eql('201')
-      expect(User.where(email: email)).to exist 
+      expect(User.where(email: email)).to exist
+      expect(User.find(result['id']).tags.pluck(:name)).to match_array(tags)
     end
   end
 
@@ -74,12 +77,19 @@ describe 'User CRUD', type: :request do
   end
 
   context 'POST /users' do
-    let(:new_email) { 'new@email.com'}
+    let(:new_email) { 'new@email.com' }
+
+    let!(:user) do
+      ::User.find(token.resource_owner_id).tap { |u| u.tags << %w(foo bar baz) }
+    end
+
+    let(:new_tags) { %w(foo bar new) }
 
     before do
       post "/v3/users/#{token.resource_owner_id}",
         params: {
-          email: new_email
+          email: new_email,
+          tags: new_tags.join(' ')
         },
         headers: {
           Authorization: "Bearer #{token.token}"
@@ -87,7 +97,10 @@ describe 'User CRUD', type: :request do
     end
 
     it 'should update the user record' do
-      expect(response.code).to eql('200') 
+      expect(response.code).to eql('200')
+      user.reload
+      expect(user.email).to eql(new_email)
+      expect(user.tags.pluck(:name)).to match_array(new_tags)
     end
   end  
 end

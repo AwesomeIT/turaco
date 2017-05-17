@@ -9,10 +9,13 @@ describe 'Experiment CRUD', type: :request do
   let(:results) { JSON.parse(response.body) }
 
   context 'PUT /experiments' do 
+    let(:tags) { 'foo bar' }
+
     before do
       put '/v3/experiments',
       params: { 
-        name: 'name'
+        name: 'name',
+        tags: tags
       },
       headers: { 'Authorization' => "Bearer #{token.token}" }
     end
@@ -20,6 +23,8 @@ describe 'Experiment CRUD', type: :request do
 
     it 'should create an experiment' do 
       expect(response.code).to eql('201')
+      expect(Experiment.find(result['id']).tags.pluck(:name))
+        .to match_array(tags.split(' '))
     end
   end
 
@@ -42,31 +47,38 @@ describe 'Experiment CRUD', type: :request do
   end
 
   context 'UPDATE /experiments' do
-    let(:experiment) { FactoryGirl.create(:experiment, user_id: token.resource_owner_id) }
+    let(:experiment) do 
+      FactoryGirl.create(:experiment,
+        user_id: token.resource_owner_id
+      ).tap { |e| e.tags << %w(foo bar baz) }
+    end
+
     let(:samples) do
       FactoryGirl.create_list(:sample, 5, user_id: token.resource_owner_id)
     end
 
-    context 'update an experiment' do
-      before do
-        post "/v3/experiments/#{experiment.id}",
-        params: {
-          name: 'new_name',
-          organization_id: organization.id,
-          sample_ids: samples.map(&:id)
-        },
-        headers: { 'Authorization' => "Bearer #{token.token}" }
-      end
+    let(:new_tags) { %w(foo bar new) }
 
-      let!(:result) { JSON.parse(response.body) }
+    before do
+      post "/v3/experiments/#{experiment.id}",
+      params: {
+        name: 'new_name',
+        organization_id: organization.id,
+        sample_ids: samples.map(&:id),
+        tags: new_tags.join(' ')
+      },
+      headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
 
-      it 'should have updated the experiment' do
-        expect(response.code).to eql('200')
-        experiment.reload
-        expect(experiment.name).to eql('new_name')
-        expect(experiment.organization).to eql(organization)
-        expect(experiment.samples).to include(*samples)
-      end
+    let(:result) { JSON.parse(response.body) }
+
+    it 'should have updated the experiment' do
+      expect(response.code).to eql('200')
+      experiment.reload
+      expect(experiment.name).to eql('new_name')
+      expect(experiment.organization).to eql(organization)
+      expect(experiment.samples).to include(*samples)
+      expect(experiment.tags.pluck(:name)).to match_array(new_tags)
     end
   end
 

@@ -13,6 +13,7 @@ module API
                         desc: 'audio sample, to be uploaded to s3'
         requires :low_label, type: String, desc: 'Label for low bound'
         requires :high_label, type: String, desc: 'Label for upper bound'
+        optional :tags, type: String, desc: 'Whitespace delimited list of tags'
       end
       put authorize: [:write, ::Sample] do
         status 201
@@ -23,9 +24,12 @@ module API
         )
 
         sample = ::Sample.create(
-          declared_hash.except(:file)
+          declared_hash.except(:file, :tags)
                        .merge(s3_key: s3_object.key, user_id: current_user.id)
         )
+
+        sample.tags << declared_params[:tags]
+                       .split(' ') if declared_params.key?(:tags)
 
         Events::PostgresSink.call(sample, :created)
         present(sample, with: Entities::Sample)
@@ -75,12 +79,19 @@ module API
       params do
         requires :id, type: Integer, desc: 'ID of sample to be updated'
         optional :name, type: String, desc: 'Name of sample'
+        optional :tags, type: String, desc: 'Whitespace delimited tags'
       end
       post '/:id', authorize: [:write, ::Sample] do
         status 200
 
         sample = ::Sample.accessible_by(current_ability)
                          .find(declared_params[:id])
+
+        if declared_params.key?(:tags)
+          tags = declared_hash.delete(:tags).split(' ')
+          sample.tags >> (sample.tags.pluck(:name) - tags)
+          sample.tags << tags
+        end
 
         sample.update_attributes(declared_hash)
         Events::PostgresSink.call(sample)

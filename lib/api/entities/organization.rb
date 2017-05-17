@@ -9,7 +9,7 @@ module API
       relation :experiments
       relation :samples
 
-      collection :tags { property :name }
+      relation :users
     end
   end
 end
