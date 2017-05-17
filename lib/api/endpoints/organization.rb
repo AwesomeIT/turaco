@@ -120,9 +120,10 @@ module API
         org = ::Organization.accessible_by(current_ability)
                             .find(declared_params[:id])
 
-        binding.pry
-
-        present(org.users, with: Entities::Collection)
+        present(
+          current_user.organizations.find(org.id)&.users,
+          with: Entities::Collection
+        )
       end
     end
   end

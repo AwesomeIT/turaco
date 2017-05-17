@@ -25,8 +25,11 @@ module CanStrap
         # Users
         can :read, User, id: user.id
 
-        can :read, User, id: OrganizationMapping.where(kindable_type: User, organization_id: user.organizations)
-                                                .pluck(:kindable_id)
+        # TODO: more efficient query
+        can :read, User, id: user.organizations
+          .map(&:users)
+          .reduce(:merge)
+                                 &.pluck(:id)
 
         can :write, User, id: user.id
       end

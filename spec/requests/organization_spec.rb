@@ -4,7 +4,7 @@ describe 'Organization CRUD', type: :request do
   let(:token) { FactoryGirl.create(:researcher_token) }
   let(:results) { JSON.parse(response.body) }
 
-  xcontext 'PUT /organizations' do
+  context 'PUT /organizations' do
     before do
       put '/v3/organizations',
         params: { name: 'Foo Organization' },
@@ -38,7 +38,7 @@ describe 'Organization CRUD', type: :request do
       expect(ids).to_not match_array(not_in_orgs.pluck(:id))
     end
 
-    xcontext 'by ID' do
+    context 'by ID' do
       before do
         get "/v3/organizations/#{organizations.first.id}", 
           headers: { 'Authorization' => "Bearer #{token.token}" }
@@ -50,7 +50,7 @@ describe 'Organization CRUD', type: :request do
       end
     end
 
-    xcontext 'tags / with elasticsearch' do
+    context 'tags / with elasticsearch' do
       before do
         allow_any_instance_of(Kagu::Query::Elastic).to receive(:search)
           .with('tags' => tags)
@@ -77,7 +77,7 @@ describe 'Organization CRUD', type: :request do
     end
   end
 
-  xcontext 'POST /organizations' do
+  context 'POST /organizations' do
     let(:org) do
       FactoryGirl.create(:organization, users: [User.find(token.resource_owner_id)])
     end
@@ -111,7 +111,7 @@ describe 'Organization CRUD', type: :request do
     end
   end
 
-  xcontext 'POST /organizations/:id/user' do
+  context 'POST /organizations/:id/user' do
     let(:org) do
       FactoryGirl.create(:organization, users: [User.find(token.resource_owner_id)])
     end
@@ -152,10 +152,8 @@ describe 'Organization CRUD', type: :request do
     let(:results) { JSON.parse(response.body) }
 
     it 'should get the users of an organization' do
-      binding.pry
       expect(response.code).to eql('200')
-      expect(results["users"]).to include(*users)
+      expect(results["users"].map { |x| x['id'] }).to include(*users.pluck(:id))
     end
-  end
-    
+  end 
 end
