@@ -29,7 +29,7 @@ module CanStrap
         can :read, User, id: user.organizations
           .map(&:users)
           .reduce(:merge)
-                                 &.pluck(:id)
+          &.pluck(:id)
 
         can :write, User, id: user.id
       end

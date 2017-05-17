@@ -1,5 +1,6 @@
-PATH
-  remote: /home/mach/Workspace/kagu
+GIT
+  remote: git://github.com/birdfeed/kagu.git
+  revision: db97221aa0a41986abbfd00a189f752a72f6c421
   specs:
     kagu (0.4.2)
       activerecord
