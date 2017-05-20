@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Permissions
   class Participant < Warhol::Ability
     define_permissions do

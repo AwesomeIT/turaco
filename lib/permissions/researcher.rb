@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Permissions
   class Researcher < Warhol::Ability
     define_permissions do
