@@ -128,3 +128,5 @@ gem 'baby_squeel', '1.1.4', require: 'baby_squeel'
 gem 'grape-swagger', '0.27.0'
 gem 'swagger_engine', '0.0.3'
 gem 'karafka', '0.5.0.2'
+
+gem 'warhol', git: 'https://github.com/mach-kernel/warhol'
