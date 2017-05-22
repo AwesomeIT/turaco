@@ -13,9 +13,9 @@ GIT
 
 GIT
   remote: https://github.com/mach-kernel/warhol
-  revision: 92bc5a3acf3ef8ef3911c2d0faf757f908d040ac
+  revision: c32be3e3c92e11414c7a016cf9535bb43f7c87e9
   specs:
-    warhol (0.1.0)
+    warhol (0.2.0)
       cancancan
 
 GEM
