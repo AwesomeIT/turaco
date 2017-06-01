@@ -24,7 +24,7 @@ module API
         new_user.tags << declared_params[:tags]
                          .split(' ') if declared_params.key?(:tags)
 
-        Events::PostgresSink.call(new_user)
+        Events::PostgresProducer.call(new_user)
         present(new_user, with: Entities::User)
       end
 
@@ -83,7 +83,7 @@ module API
         user.update_attributes(declared_hash)
         user.save
 
-        Events::PostgresSink.call(user)
+        Events::PostgresProducer.call(user)
         present(user, with: Entities::User)
       end
     end
