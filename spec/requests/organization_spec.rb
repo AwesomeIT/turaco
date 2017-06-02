@@ -149,11 +149,45 @@ describe 'Organization CRUD', type: :request do
         headers: { 'Authorization' => "Bearer #{token.token}" }
     end
 
-    let(:results) { JSON.parse(response.body) }
-
     it 'should get the users of an organization' do
       expect(response.code).to eql('200')
       expect(results["users"].map { |x| x['id'] }).to include(*users.pluck(:id))
     end
-  end 
+  end
+
+  context 'GET /organizations/:id/samples' do
+    let(:samples) { FactoryGirl.create_list(:sample, 15) }
+    let(:org) { FactoryGirl.create(:organization, samples: samples) }
+
+    before do
+      org.users << User.find(token.resource_owner_id)
+
+      get "/v3/organizations/#{org.id}/samples",
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    it 'should return the correct samples' do
+      expect(response.code).to eql('200')
+      expect(results['samples'].map { |s| s['id'] })
+        .to include(*samples.pluck(:id))
+    end
+  end
+
+  context 'GET /organizations/:id/experiments' do
+    let(:experiments) { FactoryGirl.create_list(:experiment, 15) }
+    let(:org) { FactoryGirl.create(:organization, experiments: experiments) }
+
+    before do
+      org.users << User.find(token.resource_owner_id)
+
+      get "/v3/organizations/#{org.id}/experiments",
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+    end
+
+    it 'should return the correct experiments' do
+      expect(response.code).to eql('200')
+      expect(results['experiments'].map { |s| s['id'] })
+        .to include(*experiments.pluck(:id))
+    end
+  end
 end
