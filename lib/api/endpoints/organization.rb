@@ -110,7 +110,7 @@ module API
         nil
       end
 
-      # TODO these can be generated at runtime, read-only endpoints that return
+      # TODO: these can be generated at runtime, read-only endpoints that return
       # associations seem to be easy to reproduce since RO and no complex logic,
       # why do this explicitly all the time?
       desc 'Get users for an organization'
