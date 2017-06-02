@@ -5,5 +5,5 @@ module Events
   autoload :Base
 
   autoload :EsManage
-  autoload :PostgresSink
+  autoload :PostgresProducer
 end

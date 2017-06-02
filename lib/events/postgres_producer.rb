@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 module Events
-  class PostgresSink < Base
+  class PostgresProducer < Events::Base
+    extend ActiveSupport::Autoload
+    autoload :Sample
+
+    include PostgresProducer::Sample
+
     attr_reader :action, :model
 
     %i(sample_delete_from_s3 sample_speech_recognition es_manage).each do |t|
@@ -16,7 +21,7 @@ module Events
       # If additional pipeline steps are necessary
       send(
         action_signature, model
-      ) if self.class.private_method_defined?(action_signature)
+      ) if self.class.method_defined?(action_signature)
 
       # For all records
       update_elasticsearch
@@ -33,16 +38,6 @@ module Events
       respond_to :es_manage, message: model_base_message(model).merge(
         action: es_mapped_action
       )
-    end
-
-    def sample_created(model)
-      respond_to :sample_speech_recognition,
-                 message: model_base_message(model)
-    end
-
-    def sample_destroyed(model)
-      respond_to :sample_delete_from_s3,
-                 message: model_base_message(model).merge(s3_key: model.s3_key)
     end
   end
 end

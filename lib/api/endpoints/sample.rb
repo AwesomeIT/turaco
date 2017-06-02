@@ -31,7 +31,7 @@ module API
         sample.tags << declared_params[:tags]
                        .split(' ') if declared_params.key?(:tags)
 
-        Events::PostgresSink.call(sample, :created)
+        Events::PostgresProducer.call(sample, :created)
         present(sample, with: Entities::Sample)
       end
 
@@ -68,7 +68,7 @@ module API
         status 204
 
         sample = ::Sample.find(declared_params[:id])
-        Events::PostgresSink.call(sample, :destroyed)
+        Events::PostgresProducer.call(sample, :destroyed)
         sample.destroy!
 
         nil
@@ -94,7 +94,7 @@ module API
         end
 
         sample.update_attributes(declared_hash)
-        Events::PostgresSink.call(sample)
+        Events::PostgresProducer.call(sample)
 
         present(sample, with: Entities::Sample)
       end

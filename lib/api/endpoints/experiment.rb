@@ -23,7 +23,7 @@ module API
         experiment.tags << declared_params[:tags]
                            .split(' ') if declared_params.key?(:tags)
 
-        Events::PostgresSink.call(experiment)
+        Events::PostgresProducer.call(experiment)
 
         present(experiment, with: Entities::Experiment)
       end
@@ -67,7 +67,7 @@ module API
         status 204
 
         experiment = ::Experiment.find(declared_params[:id])
-        Events::PostgresSink.call(experiment, :destroyed)
+        Events::PostgresProducer.call(experiment, :destroyed)
         experiment.destroy!
 
         nil
@@ -115,7 +115,7 @@ module API
         end
 
         experiment.save
-        Events::PostgresSink.call(experiment)
+        Events::PostgresProducer.call(experiment)
 
         present(experiment, with: Entities::Experiment)
       end
