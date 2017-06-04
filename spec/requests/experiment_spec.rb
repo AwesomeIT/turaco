@@ -19,12 +19,40 @@ describe 'Experiment CRUD', type: :request do
       },
       headers: { 'Authorization' => "Bearer #{token.token}" }
     end
-    let(:result) { JSON.parse(response.body) }
 
     it 'should create an experiment' do 
       expect(response.code).to eql('201')
-      expect(Experiment.find(result['id']).tags.pluck(:name))
+      expect(Experiment.find(results['id']).tags.pluck(:name))
         .to match_array(tags.split(' '))
+    end
+
+    context 'organizations' do
+      let(:org_id) { organization.id }
+
+      before do
+        put '/v3/experiments',
+        params: { 
+          name: 'another name',
+          tags: tags,
+          organization_id: org_id
+        },
+        headers: { 'Authorization' => "Bearer #{token.token}" }
+      end
+
+      it 'correctly assigns the organization' do 
+        expect(response.code).to eql('201')
+        expect(::Experiment.find(results['id']).organization.id)
+          .to eql(organization.id)
+      end
+
+      # e.g. no membership to that organization
+      context 'with an invalid organization_id' do
+        let(:org_id) { FactoryGirl.create(:organization).id }
+
+        it 'should not find the other organization' do
+          expect(response.code).to eql('404')
+        end
+      end
     end
   end
 
