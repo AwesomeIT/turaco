@@ -10,6 +10,8 @@ module API
       params do
         requires :name, type: String, desc: 'Name of experiment'
         optional :active, type: Boolean, desc: 'Active flag for experiment'
+        optional :organization_id, type: Integer, desc: 'Organization to '\
+                 'create experiment under'
         optional :repeats, type: Integer, desc: 'Times samples can be replayed'
         optional :tags, type: String, desc: 'Whitespace delimited tags'
       end
@@ -17,11 +19,18 @@ module API
         status 201
 
         experiment = ::Experiment.create(
-          declared_hash.except(:tags).merge(user_id: current_user.id)
+          declared_hash.except(:tags, :organization_id)
+                       .merge(user_id: current_user.id)
         )
 
         experiment.tags << declared_params[:tags]
                            .split(' ') if declared_params.key?(:tags)
+
+        experiment.organization = ::Organization.accessible_by(
+          current_ability
+        ).find(
+          declared_hash[:organization_id]
+        ) if declared_hash.key?(:organization_id)
 
         Events::PostgresProducer.call(experiment)
 
