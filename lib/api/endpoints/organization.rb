@@ -2,6 +2,8 @@
 module API
   module Endpoints
     class Organization < Grape::API
+      extend API::Meta::RelationCollections
+
       resource :organizations
       authorize_routes!
 
@@ -110,60 +112,17 @@ module API
         nil
       end
 
-      # TODO: these can be generated at runtime, read-only endpoints that return
-      # associations seem to be easy to reproduce since RO and no complex logic,
-      # why do this explicitly all the time?
-      desc 'Get users for an organization'
-      route_setting :scopes, %w(administrator researcher)
-      params do
-        requires :id, type: Integer, desc: 'ID of organization'
-      end
-      get '/:id/users', authorize: [:read, ::Organization] do
-        status 200
+      get_for relation: :users,
+              scopes: %w(administrator researcher),
+              authorize: [:read, ::Organization]
 
-        org = ::Organization.accessible_by(current_ability)
-                            .find(declared_params[:id])
+      get_for relation: :samples,
+              scopes: %w(administrator researcher),
+              authorize: [:read, ::Organization]
 
-        # TODO: This likely needs attention
-        present(
-          current_user.organizations.find(org.id)&.users,
-          with: Entities::Collection
-        )
-      end
-
-      desc 'Get samples for an organization'
-      route_setting :scopes, %w(administrator researcher)
-      params do
-        requires :id, type: Integer, desc: 'ID of organization'
-      end
-      get '/:id/samples', authorize: [:read, ::Organization] do
-        status 200
-
-        org = ::Organization.accessible_by(current_ability)
-                            .find(declared_params[:id])
-
-        present(
-          current_user.organizations.find(org.id)&.samples,
-          with: Entities::Collection
-        )
-      end
-
-      desc 'Get experiments for an organization'
-      route_setting :scopes, %w(administrator researcher)
-      params do
-        requires :id, type: Integer, desc: 'ID of organization'
-      end
-      get '/:id/experiments', authorize: [:read, ::Organization] do
-        status 200
-
-        org = ::Organization.accessible_by(current_ability)
-                            .find(declared_params[:id])
-
-        present(
-          current_user.organizations.find(org.id)&.experiments,
-          with: Entities::Collection
-        )
-      end
+      get_for relation: :experiments,
+              scopes: %w(administrator researcher),
+              authorize: [:read, ::Organization]
     end
   end
 end
