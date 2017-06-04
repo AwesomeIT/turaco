@@ -28,9 +28,9 @@ module API
 
         if declared_params.key?(:organization_id)
           experiment.organization = ::Organization
-            .accessible_by(current_ability)
-            .find(declared_hash[:organization_id])
-            
+                                    .accessible_by(current_ability)
+                                    .find(declared_hash[:organization_id])
+
           experiment.save
         end
 
