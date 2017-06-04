@@ -10,13 +10,15 @@ describe 'Experiment CRUD', type: :request do
 
   context 'PUT /experiments' do 
     let(:tags) { 'foo bar' }
+    let(:org_id) { nil }
 
     before do
       put '/v3/experiments',
       params: { 
         name: 'name',
-        tags: tags
-      },
+        tags: tags,
+        organization_id: org_id
+      }.compact,
       headers: { 'Authorization' => "Bearer #{token.token}" }
     end
 
@@ -28,16 +30,6 @@ describe 'Experiment CRUD', type: :request do
 
     context 'organizations' do
       let(:org_id) { organization.id }
-
-      before do
-        put '/v3/experiments',
-        params: { 
-          name: 'another name',
-          tags: tags,
-          organization_id: org_id
-        },
-        headers: { 'Authorization' => "Bearer #{token.token}" }
-      end
 
       it 'correctly assigns the organization' do 
         expect(response.code).to eql('201')

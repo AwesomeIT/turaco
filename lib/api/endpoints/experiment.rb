@@ -26,11 +26,13 @@ module API
         experiment.tags << declared_params[:tags]
                            .split(' ') if declared_params.key?(:tags)
 
-        experiment.organization = ::Organization.accessible_by(
-          current_ability
-        ).find(
-          declared_hash[:organization_id]
-        ) if declared_hash.key?(:organization_id)
+        if declared_params.key?(:organization_id)
+          experiment.organization = ::Organization
+                                    .accessible_by(current_ability)
+                                    .find(declared_hash[:organization_id])
+
+          experiment.save
+        end
 
         Events::PostgresProducer.call(experiment)
 
