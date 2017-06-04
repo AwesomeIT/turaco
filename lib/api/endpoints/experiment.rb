@@ -19,7 +19,7 @@ module API
         status 201
 
         experiment = ::Experiment.create(
-          declared_hash.except(*%i(tags organization_id))
+          declared_hash.except(:tags, :organization_id)
                        .merge(user_id: current_user.id)
         )
 
