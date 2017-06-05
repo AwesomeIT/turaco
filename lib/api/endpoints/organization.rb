@@ -112,8 +112,6 @@ module API
         nil
       end
 
-      binding.pry
-
       get_for relation: :users,
               scopes: %w(administrator researcher),
               authorize: [:read, ::Organization]

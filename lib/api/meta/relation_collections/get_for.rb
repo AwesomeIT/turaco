@@ -1,50 +1,75 @@
+# frozen_string_literal: true
 module API
   module Meta
     module RelationCollections
       class GetFor
-        def initialize(endpoint_klass)
+        def initialize(endpoint_klass, opts = {}, &block)
           @endpoint_klass = endpoint_klass
+          @opts = opts
+          opts[:block] = block if block.present?
+
+          decorate
         end
 
-        # def get_for(opts = {}, &block)
-        #   return unless opts.present?
+        private
 
-        #   endpoint_klass.send(:scopes, opts[:scopes]) if opts.key?(:scopes)
-        #   endpoint_klass.send(:params, &method(:get_for_params))
-        #   endpoint_klass.send(
-        #     :get, "/:id/#{opts[:relation]}", &method(:get_for_endpoint_body)
-        #   )
-        # end
+        attr_reader :endpoint_klass, :opts
 
-        # private
+        def decorate
+          return unless opts.present?
 
-        # def get_for_desc
-        #   @get_for_desc ||= "Get #{opts[:relation]} for a given #{this_resource}"
-        # end
+          endpoint_klass.send(:desc, desc)
+          endpoint_klass.send(
+            :route_setting,
+            scopes: opts[:scopes]
+          ) if opts.key?(:scopes)
 
-        # def get_for_endpoint_body
-        #   status 200
-        #   # return yield if block.present?
+          define_params
+          define_endpoint
+        end
 
-        #   data = "Kagu::Models::#{this_resource.camelize}"
-        #          .constantize
-        #          .accessible_by(current_ability)
-        #          .find(declared_params[:id])
-        #          .send(opts[:relation])
-        #          .unscoped
+        def define_params
+          endpoint_klass.instance_exec(this_resource) do |resource_name|
+            params do
+              requires :id, type: Integer, desc: "ID of #{resource_name}"
+            end
+          end
+        end
 
-        #   present(data, with: Entities::Collection)
-        # end
+        # rubocop:disable Metrics/MethodLength
+        # rubocop:disable Metrics/AbcSize
+        def define_endpoint
+          endpoint_klass.instance_exec(
+            opts.merge(this_resource: this_resource)
+          ) do |opts|
+            get "/:id/#{opts[:relation]}",
+                { authorize: opts[:authorize] }.compact do
 
-        # def get_for_params
-        #   requires :id, type: Integer, desc: "ID of #{this_resource}"
-        # end
+              status 200
+              return opts[:block].call if opts.key?(:block)
 
-        # def this_resource
-        #   @this_resource ||= endpoint_klass.name.demodulize
-        # end
+              data = "Kagu::Models::#{opts[:this_resource].camelize}"
+                     .constantize
+                     .accessible_by(current_ability)
+                     .find(declared_params[:id])
+                     .send(opts[:relation])
+                     .unscoped
 
-        # attr_reader :endpoint_klass
+              present(data, with: Entities::Collection)
+            end
+          end
+        end
+        # rubocop:enable Metrics/MethodLength
+        # rubocop:enable Metrics/AbcSize
+
+        def desc
+          @desc ||= "Get #{opts[:relation].to_s.singularize} for a given "\
+                    "#{this_resource.downcase}"
+        end
+
+        def this_resource
+          @this_resource ||= endpoint_klass.name.demodulize
+        end
       end
     end
   end

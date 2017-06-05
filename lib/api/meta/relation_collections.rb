@@ -4,7 +4,7 @@ module API
     module RelationCollections
       extend ActiveSupport::Autoload
       autoload :GetFor
-      
+
       include Meta::Delegator
     end
   end
