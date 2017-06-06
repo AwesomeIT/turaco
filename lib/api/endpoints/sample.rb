@@ -2,6 +2,8 @@
 module API
   module Endpoints
     class Sample < Grape::API
+      extend API::Meta::SimpleReads
+
       resource :samples
       authorize_routes!
 
@@ -33,15 +35,6 @@ module API
 
         Events::PostgresProducer.call(sample, :created)
         present(sample, with: Entities::Sample)
-      end
-
-      desc 'Retrieve a sample'
-      params do
-        requires :id, type: Integer, desc: 'ID of sample'
-      end
-      get '/:id', authorize: [:read, ::Sample] do
-        status 200
-        present(::Sample.find(declared_params[:id]), with: Entities::Sample)
       end
 
       desc 'Retrieve a list of samples'
@@ -143,6 +136,9 @@ module API
 
         nil
       end
+
+      get_by_id scopes: %w(administrator researcher),
+                authorize: [:read, ::Sample]
     end
     # rubocop:enable Metrics/ClassLength
   end

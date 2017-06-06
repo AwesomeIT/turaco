@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 module API
   module Meta
-    module RelationCollections
-      class GetFor < Meta::Base
+    module SimpleReads
+      class GetById < Meta::Base
         private
 
         # rubocop:disable Metrics/MethodLength
@@ -11,9 +11,7 @@ module API
           endpoint_klass.instance_exec(
             opts.merge(this_resource: this_resource)
           ) do |opts|
-            get "/:id/#{opts[:relation]}",
-                { authorize: opts[:authorize] }.compact do
-
+            get '/:id', { authorize: opts[:authorize] }.compact do
               status 200
               return opts[:block].call if opts.key?(:block)
 
@@ -21,10 +19,10 @@ module API
                      .constantize
                      .accessible_by(current_ability)
                      .find(declared_params[:id])
-                     .send(opts[:relation])
-                     .unscoped
 
-              present(data, with: Entities::Collection)
+              present(
+                data, with: "API::Entities::#{opts[:this_resource]}".constantize
+              )
             end
           end
         end
@@ -32,8 +30,7 @@ module API
         # rubocop:enable Metrics/AbcSize
 
         def desc
-          @desc ||= "Get #{opts[:relation].to_s.singularize} for a given "\
-                    "#{this_resource.downcase}"
+          @desc ||= "Get #{this_resource.downcase} by ID"
         end
       end
     end

@@ -3,6 +3,7 @@ module API
   module Endpoints
     class Organization < Grape::API
       extend API::Meta::RelationCollections
+      extend API::Meta::SimpleReads
 
       resource :organizations
       authorize_routes!
@@ -39,19 +40,6 @@ module API
         ).where(declared_hash).accessible_by(current_ability)
 
         present(organizations, with: Entities::Collection)
-      end
-
-      desc 'Retrieve an organization by ID'
-      route_setting :scopes, %w(administrator researcher participant)
-      params do
-        requires :id, type: Integer, desc: 'ID of organization'
-      end
-      get '/:id', authorize: [:write, ::Organization] do
-        status 200
-
-        present(::Organization.accessible_by(current_ability).find(
-                  declared_params[:id]
-        ), with: Entities::Organization)
       end
 
       desc 'Update an organization'
@@ -111,6 +99,9 @@ module API
         org.users << user
         nil
       end
+
+      get_by_id scopes: %w(administrator researcher participant),
+                authorize: [:read, ::Organization]
 
       get_for relation: :users,
               scopes: %w(administrator researcher),
