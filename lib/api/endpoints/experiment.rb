@@ -2,6 +2,8 @@
 module API
   module Endpoints
     class Experiment < Grape::API
+      extend API::Meta::SimpleReads
+
       resource :experiments
       authorize_routes!
 
@@ -37,19 +39,6 @@ module API
         Events::PostgresProducer.call(experiment)
 
         present(experiment, with: Entities::Experiment)
-      end
-
-      desc 'Retrieve an experiment'
-      params do
-        requires :id, type: Integer, desc: 'ID of experiment'
-      end
-      get '/:id', authorize: [:read, ::Experiment] do
-        status 200
-
-        present(
-          ::Experiment.find(declared_params[:id]),
-          with: Entities::Experiment
-        )
       end
 
       desc 'Retrieve a list of experiments'
@@ -130,6 +119,9 @@ module API
 
         present(experiment, with: Entities::Experiment)
       end
+
+      get_by_id scopes: %w(administrator researcher),
+                authorize: [:read, ::Experiment]
     end
   end
 end

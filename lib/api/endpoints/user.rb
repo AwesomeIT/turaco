@@ -2,6 +2,8 @@
 module API
   module Endpoints
     class User < Grape::API
+      extend API::Meta::SimpleReads
+
       resource :users
       authorize_routes!
 
@@ -43,19 +45,6 @@ module API
         present(current_user, with: Entities::User)
       end
 
-      desc 'Retrieve a user by ID'
-      route_setting :scopes, %(administrator)
-      params do
-        requires :id, type: String, desc: 'User ID'
-      end
-      get '/:id', authorize: [:read, ::User] do
-        status 200
-        present(
-          ::User.accessible_by(current_ability).find(declared(params)[:id]),
-          with: Entities::User
-        )
-      end
-
       # TODO: individual users can reset their own passwords
       # and stuff, but need rest of scopes first
       desc 'Update a user'
@@ -86,6 +75,9 @@ module API
         Events::PostgresProducer.call(user)
         present(user, with: Entities::User)
       end
+
+      get_by_id scopes: %w(administrator),
+                authorize: [:read, ::User]
     end
   end
 end

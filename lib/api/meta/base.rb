@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module API
   module Meta
     class Base
@@ -27,7 +28,11 @@ module API
       end
 
       def define_params
-        raise NotImplementedError
+        endpoint_klass.instance_exec(this_resource) do |resource_name|
+          params do
+            requires :id, type: Integer, desc: "ID of #{resource_name}"
+          end
+        end
       end
 
       def define_endpoint

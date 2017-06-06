@@ -3,16 +3,7 @@ module API
   module Meta
     module RelationCollections
       class GetFor < Meta::Base
-
         private
-
-        def define_params
-          endpoint_klass.instance_exec(this_resource) do |resource_name|
-            params do
-              requires :id, type: Integer, desc: "ID of #{resource_name}"
-            end
-          end
-        end
 
         # rubocop:disable Metrics/MethodLength
         # rubocop:disable Metrics/AbcSize
