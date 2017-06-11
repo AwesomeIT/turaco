@@ -9,6 +9,7 @@ module API
       property :created_at
       property :updated_at
       property :user_id
+      property :organization { property :id }
 
       relation :samples
 
