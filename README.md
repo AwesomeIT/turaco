@@ -7,7 +7,7 @@ The TalkBirdy speech analytics platform, powered by [grape, grape-roar](https://
 
 ### Requirements
 
-These packages can be found on `apt`, `brew`, `dnf`, and the Arch AUR available. If you use Windows, we highly recommend Ubuntu on Windows ([WSL](https://msdn.microsoft.com/en-us/commandline/wsl/about)). Hooray!
+These packages can be found on `apt`, `brew`, `dnf`, and the Arch AUR. If you use Windows, we highly recommend Ubuntu on Windows ([WSL](https://msdn.microsoft.com/en-us/commandline/wsl/about)). Hooray!
 
 - MRI `2.4.0` or greater
   - Rubinius also seems to work but you will hate everything getting `pg` to build properly. Not officially supported.
