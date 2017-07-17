@@ -36,7 +36,7 @@ module API
           experiment.save
         end
 
-        Events::PostgresProducer.call(experiment)
+        Kagu::Events::PostgresProducer.call(experiment)
 
         present(experiment, with: Entities::Experiment)
       end
@@ -67,7 +67,7 @@ module API
         status 204
 
         experiment = ::Experiment.find(declared_params[:id])
-        Events::PostgresProducer.call(experiment, :destroyed)
+        Kagu::Events::PostgresProducer.call(experiment, :destroyed)
         experiment.destroy!
 
         nil
@@ -115,7 +115,7 @@ module API
         end
 
         experiment.save
-        Events::PostgresProducer.call(experiment)
+        Kagu::Events::PostgresProducer.call(experiment)
 
         present(experiment, with: Entities::Experiment)
       end

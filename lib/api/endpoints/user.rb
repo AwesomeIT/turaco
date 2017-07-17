@@ -26,7 +26,7 @@ module API
         new_user.tags << declared_params[:tags]
                          .split(' ') if declared_params.key?(:tags)
 
-        Events::PostgresProducer.call(new_user)
+        Kagu::Events::PostgresProducer.call(new_user)
         present(new_user, with: Entities::User)
       end
 
@@ -72,7 +72,7 @@ module API
         user.update_attributes(declared_hash)
         user.save
 
-        Events::PostgresProducer.call(user)
+        Kagu::Events::PostgresProducer.call(user)
         present(user, with: Entities::User)
       end
 
