@@ -21,7 +21,7 @@ module API
         new_org.users << current_user
         new_org.save
 
-        Events::PostgresProducer.call(new_org)
+        Kagu::Events::PostgresProducer.call(new_org)
         present(new_org, with: Entities::Organization)
       end
 
@@ -79,7 +79,7 @@ module API
 
         org.save
 
-        Events::PostgresProducer.call(org)
+        Kagu::Events::PostgresProducer.call(org)
         present(org, with: Entities::Organization)
       end
 

@@ -33,7 +33,7 @@ module API
         sample.tags << declared_params[:tags]
                        .split(' ') if declared_params.key?(:tags)
 
-        Events::PostgresProducer.call(sample, :created)
+        Kagu::Events::PostgresProducer.call(sample, :created)
         present(sample, with: Entities::Sample)
       end
 
@@ -61,7 +61,7 @@ module API
         status 204
 
         sample = ::Sample.find(declared_params[:id])
-        Events::PostgresProducer.call(sample, :destroyed)
+        Kagu::Events::PostgresProducer.call(sample, :destroyed)
         sample.destroy!
 
         nil
@@ -87,7 +87,7 @@ module API
         end
 
         sample.update_attributes(declared_hash)
-        Events::PostgresProducer.call(sample)
+        Kagu::Events::PostgresProducer.call(sample)
 
         present(sample, with: Entities::Sample)
       end
