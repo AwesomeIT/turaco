@@ -23,4 +23,9 @@ Doorkeeper.configure do
   class Doorkeeper::Application < ActiveRecord::Base
     belongs_to :user, class_name: ::User
   end 
+
+  # Access token behavior uses refresh tokens and 
+  # expires access tokens every two hours
+  access_token_expires_in 2.hours
+  use_refresh_token
 end
