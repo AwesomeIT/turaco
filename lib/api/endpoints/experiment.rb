@@ -16,8 +16,8 @@ module API
                  'create experiment under'
         optional :repeats, type: Integer, desc: 'Number of times all samples '\
                  'are played during an experiment'
-        optional :replays, type: Integer, desc: 'Number of times a participant '\
-                 'can play a sample'
+        optional :replays, type: Integer, desc: 'Number of times a '\
+                 'participant can play a sample'
         optional :tags, type: String, desc: 'Whitespace delimited tags'
       end
       put authorize: [:write, ::Experiment] do
@@ -82,8 +82,10 @@ module API
         requires :id, type: Integer, desc: 'ID of experiment to be updated'
         optional :name, type: String, desc: 'Name of the experiment'
         optional :active, type: Boolean, desc: 'Flag for experiment being used'
-        optional :repeats, type: Integer, desc: 'Times a sample will be repeated'
-        optional :replays, type: Integer, desc: 'Times a participant can play a sample'
+        optional :repeats, type: Integer, desc: 'Times a sample will be '\
+                 'repeated'
+        optional :replays, type: Integer, desc: 'Times a participant can play '\
+                 'a sample'
         optional :organization_id, type: Integer, desc: 'Organization ID'
         optional :sample_ids, type: Array, desc: 'Samples to associate'
         optional :tags, type: String, desc: 'Whitespace delimited tags'
