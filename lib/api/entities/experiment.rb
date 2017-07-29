@@ -5,6 +5,7 @@ module API
       property :id
       property :name
       property :repeats
+      property :replays
       property :active
       property :created_at
       property :updated_at
