@@ -129,4 +129,8 @@ gem 'grape-swagger', '0.27.0'
 gem 'swagger_engine', '0.0.3'
 gem 'karafka', '0.5.0.2'
 
+# CanCanCan Wrapper
 gem 'warhol', git: 'https://github.com/mach-kernel/warhol'
+
+# Sentry event alerts
+gem 'sentry-raven'
