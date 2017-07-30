@@ -2,7 +2,6 @@
 require_relative 'boot'
 
 require 'rails'
-require 'kagu'
 
 # Pick the frameworks you want:
 require 'active_model/railtie'
